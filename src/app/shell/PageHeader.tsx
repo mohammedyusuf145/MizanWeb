@@ -5,6 +5,7 @@ import { useT } from '@/lib/i18n';
 import { IconButton } from '@/components/ui';
 import { usePalette } from './CommandPalette';
 import { LogoMark } from './Logo';
+import { ReminderCenter } from '@/features/reminders/ReminderCenter';
 
 /**
  * Page title row. On phones it also carries search and settings,
@@ -24,7 +25,8 @@ export function PageHeader({ title, meta, actions }: { title: ReactNode; meta?: 
           {meta && <div className="hidden truncate text-sm text-text-3 sm:block">{meta}</div>}
         </div>
         {actions}
-        <div className="flex items-center md:hidden">
+        <ReminderCenter />
+        <div className="-ms-2 flex items-center md:hidden">
           <IconButton label={t('nav.search')} icon={<Search size={18} />} onClick={() => openPalette(true)} tooltip={false} />
           <Link
             to="/settings"

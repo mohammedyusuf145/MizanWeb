@@ -19,6 +19,18 @@ export interface LocalFile {
   uploaded: 0 | 1;
 }
 
+/** A reminder that has fired on this device (in-app inbox). Local only, never synced. */
+export interface InboxItem {
+  key: string; // `${cardId}:${offset}:${dueAt}`
+  card_id: string;
+  board_id: string;
+  title: string;
+  offset_min: number;
+  due_at: string;
+  fired_at: string;
+  read: 0 | 1;
+}
+
 /** Per-table pull cursor (server clock) for incremental sync. */
 export interface SyncCursor {
   table: TableName;
@@ -32,6 +44,7 @@ export type MizanDB = Dexie &
     outbox: EntityTable<OutboxEntry, 'key'>;
     cursors: EntityTable<SyncCursor, 'table'>;
     files: EntityTable<LocalFile, 'id'>;
+    inbox: EntityTable<InboxItem, 'key'>;
   };
 
 /** One local database per account so signing out never mixes data between users. */
@@ -55,5 +68,6 @@ export function openDatabase(userId: string): MizanDB {
     cursors: 'table',
   });
   db.version(2).stores({ files: 'id, uploaded' });
+  db.version(3).stores({ inbox: 'key, fired_at, read, card_id' });
   return db;
 }

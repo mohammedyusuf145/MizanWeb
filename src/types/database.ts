@@ -33,6 +33,8 @@ export interface Settings extends BaseRow {
   calendar_primary: 'gregorian' | 'hijri';
   calendar_show_secondary: boolean;
   notifications: { push: boolean; in_app: boolean; offsets_min: number[] };
+  /** IANA zone, so the server can place date-only reminders at 08:00 local. */
+  timezone: string;
   timer_defaults: Record<string, unknown>;
 }
 
@@ -84,6 +86,8 @@ export interface Card extends BaseRow {
   position: string;
   completed_at: ISODate | null;
   is_sample: boolean;
+  /** Minutes before due. null = use the defaults in settings, [] = no reminders. */
+  reminder_offsets: number[] | null;
 }
 
 export interface ChecklistItem extends BaseRow {

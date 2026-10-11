@@ -16,7 +16,7 @@ import { useCurrentBoard, useQuickAdd } from './store';
  */
 export function QuickAddDialog() {
   const t = useT();
-  const { open, hide, boardId: requestedBoard, columnId: requestedColumn, dueAt } = useQuickAdd();
+  const { open, hide, boardId: requestedBoard, columnId: requestedColumn, dueAt, dueHasTime } = useQuickAdd();
   const currentBoard = useCurrentBoard((s) => s.boardId);
   const boards = useBoards();
   const boardId = requestedBoard ?? currentBoard ?? boards?.[0]?.id;
@@ -32,33 +32,35 @@ export function QuickAddDialog() {
   useEffect(() => {
     if (!open) return;
     setLastAdded(null);
+    setColumnId('');
     setText('');
     setNow(new Date());
   }, [open]);
 
-  useEffect(() => {
-    if (!columns?.length) return;
-    const fallback = columns.find((c) => c.kind !== 'done') ?? columns[0]!;
-    setColumnId((prev) => (requestedColumn && columns.some((c) => c.id === requestedColumn) ? requestedColumn : columns.some((c) => c.id === prev) ? prev : fallback.id));
-  }, [columns, requestedColumn, open]);
+  // The chosen column, falling back to the requested one, then the first column that isn't "done".
+  const effectiveColumn =
+    columns?.find((c) => c.id === columnId)?.id ??
+    columns?.find((c) => c.id === requestedColumn)?.id ??
+    (columns?.find((c) => c.kind !== 'done') ?? columns?.[0])?.id ??
+    '';
 
-  const parsed = useMemo(
-    () => parseQuickAdd(text, { now, subjects: subjects ?? [], weekStart: settings.week_start }),
-    [text, now, subjects, settings.week_start],
-  );
+  // A date typed in the text wins over the slot the dialog was opened from (e.g. a calendar cell).
+  const parsed = useMemo(() => {
+    const p = parseQuickAdd(text, { now, subjects: subjects ?? [], weekStart: settings.week_start });
+    return !p.dueAt && dueAt ? { ...p, dueAt: new Date(dueAt), hasTime: dueHasTime } : p;
+  }, [text, now, subjects, settings.week_start, dueAt, dueHasTime]);
   const subject = subjects?.find((s) => s.id === parsed.subjectId);
 
   async function submit() {
     const title = parsed.title.trim() || text.trim();
-    if (!title || !boardId || !columnId) return;
-    const due = parsed.dueAt ?? (dueAt ? new Date(dueAt) : null);
+    if (!title || !boardId || !effectiveColumn) return;
     await createCard({
       board_id: boardId,
-      column_id: columnId,
+      column_id: effectiveColumn,
       title: title.slice(0, 300),
       subject_id: parsed.subjectId,
-      due_at: due?.toISOString() ?? null,
-      due_has_time: parsed.dueAt ? parsed.hasTime : Boolean(dueAt),
+      due_at: parsed.dueAt?.toISOString() ?? null,
+      due_has_time: parsed.hasTime,
       priority: parsed.priority ?? 'med',
       is_exam: parsed.isExam,
       labels: parsed.labels,
@@ -103,7 +105,7 @@ export function QuickAddDialog() {
               />
               <button
                 type="submit"
-                disabled={!text.trim()}
+                disabled={!text.trim() || !effectiveColumn}
                 aria-label={t('qa.add')}
                 className="inline-flex size-9 shrink-0 items-center justify-center rounded-control bg-accent text-accent-ink transition-opacity disabled:opacity-30"
               >
@@ -111,7 +113,7 @@ export function QuickAddDialog() {
               </button>
             </div>
             <div className="min-h-[44px] border-t border-border px-4 py-3">
-              {text.trim() && parsed.title !== text.trim() ? (
+              {text.trim() && (parsed.title !== text.trim() || dueAt) ? (
                 <div className="flex flex-col gap-2">
                   <p className="truncate text-base text-text" dir="auto">
                     {parsed.title || '…'}
@@ -126,6 +128,8 @@ export function QuickAddDialog() {
                     {lastAdded}
                   </span>
                 </p>
+              ) : dueAt ? (
+                <TokenPreview parsed={parsed} />
               ) : (
                 <p className="text-sm text-text-3">{t('qa.hint')}</p>
               )}
@@ -134,7 +138,7 @@ export function QuickAddDialog() {
               <label className="flex min-w-0 items-center gap-2 text-sm text-text-3">
                 <span className="shrink-0">{t('qa.into')}</span>
                 <span className="w-44 min-w-0">
-                  <Select value={columnId} onChange={(e) => setColumnId(e.target.value)} className="!h-8 !text-sm">
+                  <Select value={effectiveColumn} onChange={(e) => setColumnId(e.target.value)} className="!h-8 !text-sm">
                     {columns?.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}

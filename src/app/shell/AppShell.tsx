@@ -10,6 +10,7 @@ import { ShortcutsDialog, useShortcutsDialog } from './ShortcutsDialog';
 import { QuickAddDialog } from '@/features/quick-add/QuickAddDialog';
 import { useQuickAdd } from '@/features/quick-add/store';
 import { useHotkeys } from '@/lib/hotkeys';
+import { ReminderScheduler } from '@/features/reminders/ReminderScheduler';
 
 /**
  * Phone (<768): content + bottom tabs.
@@ -41,6 +42,7 @@ export function AppShell() {
       <CommandPalette />
       <QuickAddDialog />
       <ShortcutsDialog />
+      <ReminderScheduler />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { CalendarDays, ChartColumn, GraduationCap, Timer } from 'lucide-react';
+import { ChartColumn, GraduationCap, Timer } from 'lucide-react';
 import { useT } from '@/lib/i18n';
 import type { MessageKey } from '@/locales/en';
 import { Badge, EmptyState } from '@/components/ui';
@@ -20,9 +20,6 @@ function Soon({ titleKey, headKey, bodyKey, icon }: { titleKey: MessageKey; head
   );
 }
 
-export const CalendarSoon = () => (
-  <Soon titleKey="nav.calendar" headKey="soon.calendar.title" bodyKey="soon.calendar.body" icon={<CalendarDays size={20} />} />
-);
 export const FocusSoon = () => <Soon titleKey="nav.timer" headKey="soon.timer.title" bodyKey="soon.timer.body" icon={<Timer size={20} />} />;
 export const TutorSoon = () => (
   <Soon titleKey="nav.tutor" headKey="soon.tutor.title" bodyKey="soon.tutor.body" icon={<GraduationCap size={20} />} />

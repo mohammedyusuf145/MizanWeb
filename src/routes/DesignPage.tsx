@@ -80,6 +80,7 @@ export function DesignPage() {
     position: 'a0',
     completed_at: null,
     is_sample: false,
+    reminder_offsets: null,
     created_at: '',
     updated_at: '',
     deleted_at: null,

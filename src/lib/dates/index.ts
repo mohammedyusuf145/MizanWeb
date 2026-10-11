@@ -42,6 +42,11 @@ function calendarTag(system: CalendarSystem): string {
   return system === 'hijri' ? '-u-ca-islamic-umalqura' : '';
 }
 
+/** Intl locale for a language + calendar system, always with Western digits. */
+export function calendarLocale(lang: Lang, system: CalendarSystem): string {
+  return localeFor(lang, system);
+}
+
 function localeFor(lang: Lang, system: CalendarSystem): string {
   // Combine the numbering-system extension with the calendar extension.
   const base = intlLocale(lang); // e.g. ar-BH-u-nu-latn

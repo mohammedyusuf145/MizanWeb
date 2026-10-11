@@ -6,7 +6,8 @@ interface QuickAddState {
   columnId: string | null;
   /** Prefill, e.g. from a calendar slot (Phase 3). */
   dueAt: string | null;
-  show: (opts?: { boardId?: string | null; columnId?: string | null; dueAt?: string | null }) => void;
+  dueHasTime: boolean;
+  show: (opts?: { boardId?: string | null; columnId?: string | null; dueAt?: string | null; dueHasTime?: boolean }) => void;
   hide: () => void;
 }
 
@@ -15,7 +16,9 @@ export const useQuickAdd = create<QuickAddState>((set) => ({
   boardId: null,
   columnId: null,
   dueAt: null,
-  show: (opts = {}) => set({ open: true, boardId: opts.boardId ?? null, columnId: opts.columnId ?? null, dueAt: opts.dueAt ?? null }),
+  dueHasTime: false,
+  show: (opts = {}) =>
+    set({ open: true, boardId: opts.boardId ?? null, columnId: opts.columnId ?? null, dueAt: opts.dueAt ?? null, dueHasTime: opts.dueHasTime ?? false }),
   hide: () => set({ open: false }),
 }));
 

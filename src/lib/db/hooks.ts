@@ -12,6 +12,13 @@ export const DEFAULT_SETTINGS: Omit<Settings, 'id' | 'user_id' | 'created_at' | 
   calendar_show_secondary: true,
   notifications: { push: false, in_app: true, offsets_min: [1440, 60] },
   timer_defaults: {},
+  timezone: (() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Bahrain';
+    } catch {
+      return 'Asia/Bahrain';
+    }
+  })(),
 };
 
 /** `undefined` while loading, then the stored row (or null). */

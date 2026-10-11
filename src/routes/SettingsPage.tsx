@@ -9,6 +9,7 @@ import { updateSettings, useSettings } from '@/features/settings/settings';
 import { exportAllData } from '@/features/settings/exportData';
 import { SubjectEditor } from '@/features/subjects/SubjectEditor';
 import { SubjectIcon } from '@/features/subjects/icons';
+import { NotificationSettings } from '@/features/reminders/NotificationSettings';
 import { subjectColor } from '@/design/tokens';
 import { Button, Dialog, Field, Input, Segmented, Select, Switch, toast } from '@/components/ui';
 import { PageBody, PageHeader } from '@/app/shell/PageHeader';
@@ -91,6 +92,10 @@ export function SettingsPage() {
                 description={formatDayMonth(today, lang, settings.calendar_primary === 'gregorian' ? 'hijri' : 'gregorian')}
               />
             </div>
+          </Section>
+
+          <Section title={t('notif.title')}>
+            <NotificationSettings />
           </Section>
 
           <Section

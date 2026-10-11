@@ -52,3 +52,12 @@ describe('Hijri (Umm al-Qura)', () => {
     expect(s).not.toMatch(/[٠-٩]/);
   });
 });
+
+import { calendarLocale } from './index';
+describe('calendarLocale', () => {
+  it('adds the Umm al-Qura calendar for both languages', () => {
+    expect(calendarLocale('en', 'hijri')).toContain('islamic-umalqura');
+    expect(calendarLocale('ar', 'hijri')).toContain('islamic-umalqura');
+    expect(new Intl.DateTimeFormat(calendarLocale('en', 'hijri'), { year: 'numeric' }).format(new Date(2026, 9, 11))).toMatch(/1448/);
+  });
+});

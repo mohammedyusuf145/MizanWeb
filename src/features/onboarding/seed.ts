@@ -64,6 +64,7 @@ export async function seedWorkspace(input: SeedInput) {
     completed_at: null,
     due_has_time: true,
     is_sample: false,
+    reminder_offsets: null,
   });
 
   if (input.exam) {

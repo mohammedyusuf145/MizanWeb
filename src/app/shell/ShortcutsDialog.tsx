@@ -20,6 +20,8 @@ export function ShortcutsDialog() {
     [['Enter'], t('sc.open')],
     [['Space', '← ↑ → ↓', 'Space'], t('sc.dnd')],
     [['Esc'], t('sc.close')],
+    [['T', 'D', 'W', 'M', 'A'], t('sc.calViews')],
+    [['←', '→'], t('sc.calNav')],
   ];
   return (
     <Dialog open={open} onOpenChange={setOpen} title={t('sc.title')}>

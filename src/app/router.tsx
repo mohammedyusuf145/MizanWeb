@@ -1,12 +1,14 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { AppShell } from './shell/AppShell';
 import { RequireUnonboarded, RequireWorkspace, RedirectIfSignedIn } from './Gate';
-import { RouteError } from '@/routes/RouteError';
+import { NotFound, RouteError } from '@/routes/RouteError';
+import { Splash } from './RouteFallback';
 
 /** Each page is a separate chunk, loaded on first visit. */
 export const router = createBrowserRouter([
   {
     errorElement: <RouteError />,
+    hydrateFallbackElement: <Splash label="" />,
     children: [
       {
         path: '/welcome',
@@ -31,13 +33,13 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/board" replace /> },
           { path: '/board/:boardId?', lazy: async () => ({ Component: (await import('@/routes/BoardPage')).BoardPage }) },
-          { path: '/calendar', lazy: async () => ({ Component: (await import('@/routes/SoonPages')).CalendarSoon }) },
+          { path: '/calendar', lazy: async () => ({ Component: (await import('@/routes/CalendarPage')).CalendarPage }) },
           { path: '/focus', lazy: async () => ({ Component: (await import('@/routes/SoonPages')).FocusSoon }) },
           { path: '/tutor', lazy: async () => ({ Component: (await import('@/routes/SoonPages')).TutorSoon }) },
           { path: '/stats', lazy: async () => ({ Component: (await import('@/routes/SoonPages')).StatsSoon }) },
           { path: '/settings', lazy: async () => ({ Component: (await import('@/routes/SettingsPage')).SettingsPage }) },
           { path: '/design', lazy: async () => ({ Component: (await import('@/routes/DesignPage')).DesignPage }) },
-          { path: '*', lazy: async () => ({ Component: (await import('@/routes/RouteError')).NotFound }) },
+          { path: '*', element: <NotFound /> },
         ],
       },
     ],

@@ -3,3 +3,7 @@ project_id = "mizan"
 
 [functions.delete-account]
 verify_jwt = true
+
+# Called by pg_cron with a shared secret, not a user JWT.
+[functions.send-reminders]
+verify_jwt = false

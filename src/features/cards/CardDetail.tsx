@@ -33,6 +33,8 @@ import { ChecklistEditor } from './ChecklistEditor';
 import { LabelsInput } from './LabelsInput';
 import { RepeatField } from './RepeatField';
 import { AttachmentsField } from './AttachmentsField';
+import { OffsetChips } from '@/features/reminders/OffsetChips';
+import { useSettings } from '@/features/settings/settings';
 
 /** Side panel (desktop) / bottom sheet (phone) with every field of a card. Edits save as you go. */
 export function CardDetail({ cardId, onClose }: { cardId: string | null; onClose: () => void }) {
@@ -293,6 +295,9 @@ function CardFields({ card }: { card: Card }) {
         <Row label={t('card.repeat')} align="start">
           <RepeatField rule={card.repeat_rule} due={due} onChange={(r) => updateCard(card.id, { repeat_rule: r })} />
         </Row>
+        <Row label={t('rem.card.label')} align="start">
+          <CardReminders card={card} />
+        </Row>
         <Row label={t('card.labels')} align="start">
           <LabelsInput value={card.labels} onChange={(labels) => updateCard(card.id, { labels })} />
         </Row>
@@ -348,6 +353,41 @@ function CardFields({ card }: { card: Card }) {
       </Section>
 
       <p className="border-t border-border pt-4 text-xs text-text-3">{t('card.created', { date: formatDateLong(new Date(card.created_at), lang) })}</p>
+    </div>
+  );
+}
+
+function CardReminders({ card }: { card: Card }) {
+  const t = useT();
+  const settings = useSettings();
+  const mode = card.reminder_offsets === null ? 'default' : card.reminder_offsets.length === 0 ? 'off' : 'custom';
+  if (!card.due_at) return <p className="flex h-10 items-center text-sm text-text-3">{t('repeat.needsDue')}</p>;
+  return (
+    <div className="flex flex-col gap-2">
+      <Segmented<'default' | 'custom' | 'off'>
+        label={t('rem.card.label')}
+        value={mode}
+        onValueChange={(v) =>
+          updateCard(card.id, { reminder_offsets: v === 'default' ? null : v === 'off' ? [] : [...settings.notifications.offsets_min] })
+        }
+        options={[
+          { value: 'default', label: t('rem.card.default') },
+          { value: 'custom', label: t('rem.card.custom') },
+          { value: 'off', label: t('rem.card.off') },
+        ]}
+        className="w-full"
+      />
+      {mode === 'default' && (
+        <p className="text-xs text-text-3">{settings.notifications.offsets_min.map((o) => t(`rem.offset.${o}` as 'rem.offset.0')).join(' · ') || t('rem.card.off')}</p>
+      )}
+      {mode === 'custom' && (
+        <OffsetChips
+          value={card.reminder_offsets ?? []}
+          onChange={(v) => updateCard(card.id, { reminder_offsets: v.length ? v : [] })}
+          label={t('rem.card.label')}
+        />
+      )}
+      {mode !== 'off' && !card.due_has_time && <p className="text-xs text-text-3">{t('rem.card.dateOnlyHint')}</p>}
     </div>
   );
 }

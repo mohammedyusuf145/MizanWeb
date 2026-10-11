@@ -101,6 +101,7 @@ export async function createCard(input: NewCard): Promise<Card> {
     repeat_rule: null,
     completed_at: column?.kind === 'done' ? new Date().toISOString() : null,
     is_sample: false,
+    reminder_offsets: null,
     ...input,
     position: positionAt(siblings, siblings.length),
   });

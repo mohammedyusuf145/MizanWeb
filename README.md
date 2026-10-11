@@ -3,8 +3,8 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 2 of 6 — board, cards, subjects, attachments and quick-add on top of the Phase 1
-> foundation (design system, app shell, auth, schema, sync engine, onboarding).
+> **Status:** Phase 3 of 6 — calendar and reminders, on top of the board (Phase 2) and the foundation
+> (Phase 1: design system, app shell, auth, schema, sync engine, onboarding).
 
 ## Using the board
 
@@ -57,6 +57,28 @@ cross-device sync. Your data stays on that device.
 The anon key is safe in the browser: every table has Row Level Security, so a user can only read and write their own rows.
 **Never** put the service-role key or `ANTHROPIC_API_KEY` in a `VITE_` variable.
 
+## Calendar and reminders
+
+The calendar is drawn from card due dates — there is nothing to enter twice. Day, Week, Month and Agenda views
+(Agenda is the default on phones). Drag an event to reschedule its card (keyboard: focus it, **Space**, arrows move
+15 minutes / one day, **Space**). Click an empty slot to create a card at that time. Shortcuts: **T** today,
+**D/W/M/A** views, **← →** previous/next. Dates respect the week start and Gregorian/Hijri settings.
+
+Reminders default to 1 day and 1 hour before (Settings → Notifications), and each card can use the defaults, its own
+times, or none. Date-only cards remind at 08:00 local. Reminders appear in-app (toast + bell) while Mizan is open on
+any setup. To receive them when the app is closed (web push):
+
+1. `npx web-push generate-vapid-keys`
+2. Put the public key in `VITE_VAPID_PUBLIC_KEY` (Vercel env) and set the function secrets:
+   ```bash
+   npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com CRON_SECRET=$(openssl rand -hex 32)
+   npx supabase functions deploy send-reminders --no-verify-jwt
+   ```
+3. Edit and run `supabase/cron/schedule-reminders.sql` in the SQL editor (project ref + the same `CRON_SECRET`).
+   It calls the function every minute; reminders are deduplicated in `reminder_log`.
+4. Each device turns on **Settings → Notifications → Device notifications**. On iPhone/iPad, add Mizan to the
+   Home Screen first (iOS 16.4+), then enable it from the installed app.
+
 ## Scripts
 
 | Command | What it does |
@@ -66,6 +88,7 @@ The anon key is safe in the browser: every table has Row Level Security, so a us
 | `npm run preview` | Serve the production build |
 | `npm test` | Unit tests (Vitest) |
 | `npm run typecheck` | TypeScript only |
+| `npx deno test --allow-env supabase/functions/send-reminders` | Edge Function tests (Deno) |
 
 ## How it fits together
 
@@ -97,8 +120,9 @@ src/
   locales/        en.ts, ar.ts (typed: a missing Arabic key is a compile error)
   routes/         one lazily-loaded module per page
 supabase/
-  migrations/     core schema, RLS, storage bucket, realtime publication
-  functions/      _shared (CORS, JWT check), delete-account
+  migrations/     core schema, RLS, storage bucket, realtime publication, reminders + push
+  functions/      _shared (CORS, JWT check), delete-account, send-reminders (web push)
+  cron/           one-off SQL to schedule send-reminders with pg_cron
 ```
 
 ## Design system
