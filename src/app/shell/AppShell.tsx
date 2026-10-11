@@ -11,6 +11,7 @@ import { QuickAddDialog } from '@/features/quick-add/QuickAddDialog';
 import { useQuickAdd } from '@/features/quick-add/store';
 import { useHotkeys } from '@/lib/hotkeys';
 import { ReminderScheduler } from '@/features/reminders/ReminderScheduler';
+import { TimerRunner } from '@/features/timer/TimerRunner';
 
 /**
  * Phone (<768): content + bottom tabs.
@@ -43,6 +44,7 @@ export function AppShell() {
       <QuickAddDialog />
       <ShortcutsDialog />
       <ReminderScheduler />
+      <TimerRunner />
     </div>
   );
 }

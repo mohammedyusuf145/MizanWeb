@@ -53,7 +53,7 @@ export function DesignPage() {
     id: 's',
     user_id: 'u',
     name: 'Physics',
-    color: '#8E96EE',
+    color: '#6F7DED',
     icon: 'atom',
     position: 'a0',
     archived_at: null,
@@ -249,8 +249,8 @@ export function DesignPage() {
           <Block title="Cards">
             <div className="grid max-w-[1000px] gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <CardTile card={card({})} subject={subject} done={false} />
-              <CardTile card={card({ title: 'Unit 3 test', is_exam: true, priority: 'high', estimate_min: null })} subject={{ ...subject, color: '#EF8A6F', name: 'Mathematics' }} done={false} />
-              <CardTile card={card({ title: 'Read chapter 2', due_at: new Date(now.getTime() - 3600_000).toISOString(), priority: 'high' })} subject={{ ...subject, color: '#C6A981', name: 'Arabic' }} done={false} />
+              <CardTile card={card({ title: 'Unit 3 test', is_exam: true, priority: 'high', estimate_min: null })} subject={{ ...subject, color: '#B83E0A', name: 'Mathematics' }} done={false} />
+              <CardTile card={card({ title: 'Read chapter 2', due_at: new Date(now.getTime() - 3600_000).toISOString(), priority: 'high' })} subject={{ ...subject, color: '#C77806', name: 'Arabic' }} done={false} />
             </div>
           </Block>
 

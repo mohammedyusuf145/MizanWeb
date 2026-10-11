@@ -45,8 +45,9 @@
 
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
 
-  /* Subject colours are applied raw on dark */
-  --subject-mix: 100%;
+  /* Subject colours: the stored hex is the validated chart colour; UI text/dots are lifted toward white */
+  --subject-mix: 68%;
+  --subject-toward: #fff;
 }
 
 :root[data-theme='light'] {
@@ -81,8 +82,9 @@
   --elev-pop: 0 12px 32px -8px rgb(20 22 26 / 0.16), 0 2px 6px rgb(20 22 26 / 0.08);
   --elev-sheet: 0 24px 64px -12px rgb(20 22 26 / 0.24);
 
-  /* Subject colours are darkened on paper so dots and text stay legible */
-  --subject-mix: 64%;
+  /* …and pulled toward black on paper, so subject-coloured text stays >= 4.5:1 */
+  --subject-mix: 78%;
+  --subject-toward: #000;
 }
 
 :root {

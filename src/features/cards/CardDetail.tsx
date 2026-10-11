@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { CheckCircle2, CircleDashed, Copy, MoreHorizontal, Trash2, X } from 'lucide-react';
+import { CheckCircle2, CircleDashed, Copy, MoreHorizontal, Timer, Trash2, X } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import type { Card, Priority } from '@/types/database';
 import { useCard, useColumns, useSubjects } from '@/lib/db/hooks';
 import { useI18n, useT } from '@/lib/i18n';
@@ -94,9 +95,15 @@ function TitleField({ card }: { card: Card }) {
 
 function CardActions({ card, onClose }: { card: Card; onClose: () => void }) {
   const t = useT();
+  const navigate = useNavigate();
   const done = Boolean(card.completed_at);
   return (
     <div className="flex shrink-0 items-center gap-1">
+      {!done && (
+        <Button size="sm" variant="ghost" iconStart={<Timer size={15} />} onClick={() => navigate(`/focus?card=${card.id}`)}>
+          <span className="max-sm:sr-only">{t('focus.startFromCard')}</span>
+        </Button>
+      )}
       <Button
         size="sm"
         variant={done ? 'secondary' : 'ghost'}

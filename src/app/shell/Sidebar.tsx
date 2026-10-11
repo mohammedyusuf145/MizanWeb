@@ -8,6 +8,7 @@ import { LogoMark } from './Logo';
 import { SyncIndicator } from './SyncIndicator';
 import { usePalette } from './CommandPalette';
 import { useShell } from './useShell';
+import { FocusIndicator } from '@/features/timer/FocusIndicator';
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
 
@@ -119,6 +120,7 @@ function SideLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
       {isActive && <span aria-hidden className="absolute inset-y-2.5 start-0 w-0.5 rounded-full bg-accent" />}
       <Icon size={18} strokeWidth={isActive ? 2 : 1.75} className={isActive ? 'text-accent' : undefined} />
       {!collapsed && <span className="truncate">{label}</span>}
+      {item.to === '/focus' && <FocusIndicator compact={collapsed} />}
     </NavLink>
   );
   return collapsed ? (

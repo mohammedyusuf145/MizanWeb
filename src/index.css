@@ -71,7 +71,8 @@
   --radius-pop: 10px;
   --radius-sheet: 14px;
 
-  /* Breakpoints */
+  /* Breakpoints (all in px so Tailwind orders them correctly) */
+  --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
@@ -208,3 +209,15 @@
 .prose-mizan th, .prose-mizan td { border: 1px solid var(--border); padding: 6px 8px; text-align: start; }
 .prose-mizan hr { border: 0; border-top: 1px solid var(--border); }
 .prose-mizan input[type='checkbox'] { accent-color: var(--accent); margin-inline-end: 6px; }
+
+/* ── Focus Garden ─────────────────────────────────────────────────────────── */
+@keyframes garden-sway { from { transform: rotate(-0.9deg); } to { transform: rotate(0.9deg); } }
+.garden-sway { transform-box: view-box; transform-origin: 120px 230px; animation: garden-sway 7s var(--motion-standard) infinite alternate; }
+.garden-rest { animation-duration: 11s; }
+.garden-still { animation-play-state: paused; }
+.garden-leaf { transform-box: fill-box; transition: transform 900ms var(--motion-emphasized), opacity 600ms var(--motion-standard); }
+.garden-stem { transition: stroke-dashoffset 1200ms var(--motion-standard); }
+.garden-wilt { transform-box: view-box; transform-origin: 120px 230px; transition: transform 2s var(--motion-standard), filter 2s var(--motion-standard); }
+@media (prefers-reduced-motion: reduce) {
+  .garden-sway { animation: none; }
+}

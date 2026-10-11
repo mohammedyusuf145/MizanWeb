@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import type { Attachment, Board, Card, ChecklistItem, Column, Profile, Settings, Subject } from '@/types/database';
+import type { Attachment, Board, Card, ChecklistItem, Column, FocusSession, Profile, Settings, Subject } from '@/types/database';
 import { useDbStore } from './index';
 
 const byPosition = <T extends { position: string }>(a: T, b: T) => (a.position < b.position ? -1 : a.position > b.position ? 1 : 0);
@@ -136,5 +136,15 @@ export function useCardMeta(cardIds: string[] | undefined): Map<string, CardMeta
       for (const a of await db.attachments.where('card_id').anyOf(cardIds).toArray()) if (!a.deleted_at) get(a.card_id).attachments++;
       return map;
     }, [db, key]) ?? new Map()
+  );
+}
+
+/** Focus sessions that started on or after `since` (live). */
+export function useFocusSessions(since: Date): FocusSession[] | undefined {
+  const db = useDbStore((s) => s.db);
+  const key = since.toISOString();
+  return useLiveQuery(
+    async () => (db ? (await db.focus_sessions.where('started_at').aboveOrEqual(key).toArray()).filter((s) => !s.deleted_at) : []),
+    [db, key],
   );
 }

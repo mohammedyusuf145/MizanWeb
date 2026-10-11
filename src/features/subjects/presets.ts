@@ -11,13 +11,13 @@ export interface SubjectPreset {
 
 /** Bahrain public secondary track, editable at any time. */
 export const SUBJECT_PRESETS: SubjectPreset[] = [
-  { key: 'arabic', nameKey: 'subject.preset.arabic', icon: 'pen-line', color: '#C6A981', core: true },
-  { key: 'english', nameKey: 'subject.preset.english', icon: 'languages', color: '#62A6E6', core: true },
-  { key: 'math', nameKey: 'subject.preset.math', icon: 'calculator', color: '#EF8A6F', core: true },
-  { key: 'physics', nameKey: 'subject.preset.physics', icon: 'atom', color: '#8E96EE', core: true },
-  { key: 'chemistry', nameKey: 'subject.preset.chemistry', icon: 'flask-conical', color: '#41B6C2', core: true },
-  { key: 'biology', nameKey: 'subject.preset.biology', icon: 'dna', color: '#A9C65C', core: true },
-  { key: 'islamic', nameKey: 'subject.preset.islamic', icon: 'book-marked', color: '#4FC59B', core: true },
-  { key: 'citizenship', nameKey: 'subject.preset.citizenship', icon: 'landmark', color: '#E3B04F', core: true },
-  { key: 'design', nameKey: 'subject.preset.design', icon: 'palette', color: '#C68ADB', core: false },
+  { key: 'arabic', nameKey: 'subject.preset.arabic', icon: 'pen-line', color: '#C77806', core: true },
+  { key: 'english', nameKey: 'subject.preset.english', icon: 'languages', color: '#046A94', core: true },
+  { key: 'math', nameKey: 'subject.preset.math', icon: 'calculator', color: '#B83E0A', core: true },
+  { key: 'physics', nameKey: 'subject.preset.physics', icon: 'atom', color: '#6F7DED', core: true },
+  { key: 'chemistry', nameKey: 'subject.preset.chemistry', icon: 'flask-conical', color: '#029BA3', core: true },
+  { key: 'biology', nameKey: 'subject.preset.biology', icon: 'dna', color: '#4C9D2D', core: true },
+  { key: 'islamic', nameKey: 'subject.preset.islamic', icon: 'book-marked', color: '#027445', core: true },
+  { key: 'citizenship', nameKey: 'subject.preset.citizenship', icon: 'landmark', color: '#8F6100', core: true },
+  { key: 'design', nameKey: 'subject.preset.design', icon: 'palette', color: '#8E49B0', core: false },
 ];

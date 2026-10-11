@@ -3,8 +3,8 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 3 of 6 — calendar and reminders, on top of the board (Phase 2) and the foundation
-> (Phase 1: design system, app shell, auth, schema, sync engine, onboarding).
+> **Status:** Phase 4 of 6 — focus timer, Focus Garden and stats, on top of the calendar and reminders (Phase 3),
+> the board (Phase 2) and the foundation (Phase 1).
 
 ## Using the board
 
@@ -78,6 +78,24 @@ any setup. To receive them when the app is closed (web push):
    It calls the function every minute; reminders are deduplicated in `reminder_log`.
 4. Each device turns on **Settings → Notifications → Device notifications**. On iPhone/iPad, add Mizan to the
    Home Screen first (iOS 16.4+), then enable it from the installed app.
+
+## Focus timer and stats
+
+- **Intervals** (25/5, 50/10 or custom lengths, sessions before a long break, auto-start options) or an **open**
+  count-up session. Link a session to a subject and/or a card — from the Focus page or a card's **Focus** button.
+  Lengths can be saved per subject.
+- **Accurate by construction:** the timer stores timestamps, never counts ticks, so it survives sleeping tabs,
+  refreshes and switching devices (the state syncs like any other row). Finished sessions are logged once, even if
+  two devices are open, using a deterministic session id.
+- **Views:** Focus Garden (a plant that grows through the session, flowers when it's done, rests on breaks and leans
+  a little if you leave mid-session), a large clock, a ring, or an ambient wash in the subject colour.
+  **F** opens fullscreen focus mode, **Space** starts/pauses.
+- **Sound:** rain, café, white and deep noise are synthesised in the browser (no files, works offline); "Your track"
+  loops an audio file from your device. Soft two-note chime at the end of a session.
+- **Daily goal, streaks** (days with 10+ minutes of focus) and quiet milestone notes.
+- **Stats:** focus per day by subject (with a table view), by-subject breakdown, best hours of the day, streaks and
+  a weekly summary. Subject colours come from a 10-slot palette validated for both themes (lightness band, chroma,
+  colour-blind separation of neighbours, contrast); charts stack subjects in that fixed order.
 
 ## Scripts
 

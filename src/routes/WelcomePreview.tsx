@@ -10,9 +10,9 @@ import { ProgressRing } from '@/components/ui';
  */
 export function WelcomePreview() {
   const t = useT();
-  const math = '#EF8A6F';
-  const physics = '#8E96EE';
-  const arabic = '#C6A981';
+  const math = '#B83E0A';
+  const physics = '#6F7DED';
+  const arabic = '#C77806';
   return (
     <div aria-hidden className="relative hidden overflow-hidden border-s border-border bg-surface-1 lg:block">
       <div className="relative flex h-full items-center px-16">

@@ -2,6 +2,7 @@ import { NavLink } from 'react-router';
 import { NAV_ITEMS } from '../nav';
 import { useT } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
+import { FocusIndicator } from '@/features/timer/FocusIndicator';
 
 /** Phone navigation: five thumb-reachable tabs, 64px tall plus the home-indicator inset. */
 export function BottomTabs() {
@@ -25,7 +26,8 @@ export function BottomTabs() {
             >
               {({ isActive }) => (
                 <>
-                  <span className={cn('flex h-7 w-12 items-center justify-center rounded-full transition-colors', isActive && 'bg-accent-soft')}>
+                  <span className={cn('relative flex h-7 w-12 items-center justify-center rounded-full transition-colors', isActive && 'bg-accent-soft')}>
+                    {to === '/focus' && <FocusIndicator compact />}
                     <Icon size={20} strokeWidth={isActive ? 2 : 1.75} className={isActive ? 'text-accent' : undefined} />
                   </span>
                   <span>{t(labelKey)}</span>
