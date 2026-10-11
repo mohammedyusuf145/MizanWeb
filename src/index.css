@@ -185,3 +185,26 @@
   }
   .anim-spin { animation: spin 1.6s linear infinite !important; animation-iteration-count: infinite !important; }
 }
+
+/* ── Rendered Markdown (card descriptions, tutor answers) ─────────────────── */
+.prose-mizan { color: var(--text); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
+.prose-mizan:lang(ar), [dir='rtl'] .prose-mizan { line-height: 1.85; }
+.prose-mizan > * + * { margin-top: 0.75em; }
+.prose-mizan h1, .prose-mizan h2, .prose-mizan h3 { font-weight: 600; line-height: 1.3; margin-top: 1.25em; }
+.prose-mizan h1 { font-size: 18px; }
+.prose-mizan h2 { font-size: 16px; }
+.prose-mizan h3 { font-size: 14px; }
+.prose-mizan ul, .prose-mizan ol { padding-inline-start: 1.25em; }
+.prose-mizan ul { list-style: disc; }
+.prose-mizan ol { list-style: decimal; }
+.prose-mizan li + li { margin-top: 0.25em; }
+.prose-mizan li::marker { color: var(--text-3); }
+.prose-mizan a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+.prose-mizan code { font-family: var(--font-num); font-size: 0.9em; background: var(--surface-3); border-radius: 4px; padding: 0.1em 0.35em; }
+.prose-mizan pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 12px; overflow-x: auto; direction: ltr; text-align: left; }
+.prose-mizan pre code { background: none; padding: 0; }
+.prose-mizan blockquote { border-inline-start: 2px solid var(--border-strong); padding-inline-start: 12px; color: var(--text-2); }
+.prose-mizan table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.prose-mizan th, .prose-mizan td { border: 1px solid var(--border); padding: 6px 8px; text-align: start; }
+.prose-mizan hr { border: 0; border-top: 1px solid var(--border); }
+.prose-mizan input[type='checkbox'] { accent-color: var(--accent); margin-inline-end: 6px; }

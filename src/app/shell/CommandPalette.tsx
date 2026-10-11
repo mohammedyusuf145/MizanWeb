@@ -1,12 +1,15 @@
 import { Command } from 'cmdk';
 import { Dialog as D } from 'radix-ui';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { create } from 'zustand';
-import { Languages, Palette, SunMoon, Search } from 'lucide-react';
+import { Keyboard, Languages, Palette, Plus, SunMoon, Search, SquareKanban } from 'lucide-react';
 import { NAV_ITEMS, SETTINGS_ITEM } from '../nav';
 import { useI18n, useT } from '@/lib/i18n';
 import { updateSettings, useSettings } from '@/features/settings/settings';
+import { useQuickAdd } from '@/features/quick-add/store';
+import { useAllCards, useBoards } from '@/lib/db/hooks';
+import { useShortcutsDialog } from './ShortcutsDialog';
 import type { ReactNode } from 'react';
 
 export const usePalette = create<{ open: boolean; setOpen: (open: boolean) => void }>((set) => ({
@@ -21,6 +24,13 @@ export function CommandPalette() {
   const { open, setOpen } = usePalette();
   const lang = useI18n((s) => s.lang);
   const settings = useSettings();
+  const cards = useAllCards();
+  const boards = useBoards();
+  const activeBoards = new Set((boards ?? []).map((b) => b.id));
+  const [query, setQuery] = useState('');
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -52,6 +62,8 @@ export function CommandPalette() {
               <Search size={16} className="shrink-0 text-text-3" />
               <Command.Input
                 autoFocus
+                value={query}
+                onValueChange={setQuery}
                 placeholder={t('palette.placeholder')}
                 className="h-12 w-full bg-transparent text-md text-text placeholder:text-text-3 focus:outline-none"
               />
@@ -66,6 +78,9 @@ export function CommandPalette() {
                 ))}
               </Group>
               <Group heading={t('palette.actions')}>
+                <Item value="new card add بطاقة جديدة" icon={<Plus size={16} />} onSelect={() => run(() => useQuickAdd.getState().show())}>
+                  {t('palette.newCard')}
+                </Item>
                 <Item
                   value="language arabic english لغة"
                   icon={<Languages size={16} />}
@@ -86,10 +101,32 @@ export function CommandPalette() {
                   {t('palette.toggleTheme')}
                   <span className="ms-auto text-xs text-text-3">{t(`settings.theme.${settings.theme}`)}</span>
                 </Item>
+                <Item value="keyboard shortcuts اختصارات" icon={<Keyboard size={16} />} onSelect={() => run(() => useShortcutsDialog.getState().setOpen(true))}>
+                  {t('palette.shortcuts')}
+                </Item>
                 <Item value="design system tokens" icon={<Palette size={16} />} onSelect={() => run(() => navigate('/design'))}>
                   {t('design.title')}
                 </Item>
               </Group>
+              {query.trim().length > 0 && cards && cards.length > 0 && (
+                <Group heading={t('palette.cards')}>
+                  {cards
+                    .filter((c) => activeBoards.has(c.board_id))
+                    .slice(0, 500)
+                    .map((c) => (
+                      <Item
+                        key={c.id}
+                        value={`card ${c.id} ${c.title} ${c.labels.join(' ')}`}
+                        icon={<SquareKanban size={16} />}
+                        onSelect={() => run(() => navigate(`/board/${c.board_id}?card=${c.id}`))}
+                      >
+                        <span className="truncate" dir="auto">
+                          {c.title}
+                        </span>
+                      </Item>
+                    ))}
+                </Group>
+              )}
             </Command.List>
           </Command>
         </D.Content>

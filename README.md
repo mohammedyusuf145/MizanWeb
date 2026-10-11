@@ -3,7 +3,26 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 1 of 6 — design system, app shell, auth, database schema, sync engine, onboarding.
+> **Status:** Phase 2 of 6 — board, cards, subjects, attachments and quick-add on top of the Phase 1
+> foundation (design system, app shell, auth, schema, sync engine, onboarding).
+
+## Using the board
+
+| | |
+| --- | --- |
+| **N** | Quick-add a card. Type naturally: `Math homework tomorrow 5pm`, `اختبار الكيمياء الخميس عاجل 45 دقيقة`. Understands dates (today, tomorrow/بكرة/باچر, weekdays, `in 3 days`, `15/10`), times (`5pm`, `الساعة 5`, `7 مساءً`), `@subject`, `#label`, `!high`/`عاجل`, and estimates (`45m`, `ساعة`). |
+| **/** | Search cards (title, description, notes, labels; ignores Arabic diacritics and hamza forms) |
+| **⌘/Ctrl K** | Command palette, including search across all cards |
+| **?** | All keyboard shortcuts |
+| Drag | Mouse: drag. Touch: long-press then drag. Keyboard: focus a card, **Space**, arrow keys, **Space**. |
+
+Cards open in a side panel (bottom sheet on phones) with status, subject, due date and time, priority, exam flag,
+focus estimate, repeat rule, labels, checklist, Markdown description, attachments and notes. Everything saves as you type.
+Moving a card into a "done" column completes it; completing a repeating card creates the next one.
+Group the board by status, subject, priority or due date, and filter by subject, priority, due date, labels or exams.
+
+Attachments (PDF, images, Word, PowerPoint, Excel, text; up to 20 MB) are stored on the device first and uploaded to the
+private `attachments` bucket when online, so they work offline and in demo mode.
 
 ## Quick start (no setup — local demo mode)
 

@@ -20,7 +20,7 @@ export function PageHeader({ title, meta, actions }: { title: ReactNode; meta?: 
           <LogoMark size={24} />
         </span>
         <div className="flex min-w-0 flex-1 items-baseline gap-3">
-          <h1 className="truncate text-lg font-semibold text-text md:text-xl">{title}</h1>
+          {typeof title === 'string' ? <h1 className="truncate text-lg font-semibold text-text md:text-xl">{title}</h1> : title}
           {meta && <div className="hidden truncate text-sm text-text-3 sm:block">{meta}</div>}
         </div>
         {actions}

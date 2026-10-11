@@ -12,6 +12,13 @@ export interface OutboxEntry {
   attempts: number;
 }
 
+/** Local copy of an attachment's bytes: works offline and in demo mode; uploaded when online. */
+export interface LocalFile {
+  id: string; // = attachments.id
+  blob: Blob;
+  uploaded: 0 | 1;
+}
+
 /** Per-table pull cursor (server clock) for incremental sync. */
 export interface SyncCursor {
   table: TableName;
@@ -24,6 +31,7 @@ export type MizanDB = Dexie &
   Tables & {
     outbox: EntityTable<OutboxEntry, 'key'>;
     cursors: EntityTable<SyncCursor, 'table'>;
+    files: EntityTable<LocalFile, 'id'>;
   };
 
 /** One local database per account so signing out never mixes data between users. */
@@ -46,5 +54,6 @@ export function openDatabase(userId: string): MizanDB {
     outbox: 'key, table',
     cursors: 'table',
   });
+  db.version(2).stores({ files: 'id, uploaded' });
   return db;
 }

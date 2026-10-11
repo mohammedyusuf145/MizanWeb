@@ -6,6 +6,10 @@ import { Sidebar } from './Sidebar';
 import { BottomTabs } from './BottomTabs';
 import { CommandPalette } from './CommandPalette';
 import { RouteFallback } from '../RouteFallback';
+import { ShortcutsDialog, useShortcutsDialog } from './ShortcutsDialog';
+import { QuickAddDialog } from '@/features/quick-add/QuickAddDialog';
+import { useQuickAdd } from '@/features/quick-add/store';
+import { useHotkeys } from '@/lib/hotkeys';
 
 /**
  * Phone (<768): content + bottom tabs.
@@ -15,6 +19,10 @@ import { RouteFallback } from '../RouteFallback';
 export function AppShell() {
   const t = useT();
   const desktop = useMediaQuery('(min-width: 1024px)');
+  useHotkeys({
+    n: () => useQuickAdd.getState().show(),
+    '?': () => useShortcutsDialog.getState().setOpen(true),
+  });
   return (
     <div className="flex min-h-dvh">
       <a
@@ -31,6 +39,8 @@ export function AppShell() {
       </main>
       <BottomTabs />
       <CommandPalette />
+      <QuickAddDialog />
+      <ShortcutsDialog />
     </div>
   );
 }

@@ -45,7 +45,7 @@ const icons = {
   danger: <CircleAlert size={16} className="text-danger" />,
 };
 
-/** Toast region. Bottom inline-start on desktop; above the tab bar on phones. */
+/** Toast region. Bottom inline-end on desktop (clear of the sidebar); above the tab bar on phones. */
 export function Toaster() {
   const items = useToasts((s) => s.items);
   const dismiss = useToasts((s) => s.dismiss);
@@ -56,7 +56,7 @@ export function Toaster() {
       role="status"
       className={cn(
         'pointer-events-none fixed inset-x-4 bottom-[calc(var(--bottombar-h)+16px+env(safe-area-inset-bottom))] z-[var(--z-toast)] flex flex-col items-center gap-2',
-        'md:inset-x-auto md:start-6 md:bottom-6 md:items-start',
+        'md:inset-x-auto md:end-6 md:bottom-6 md:items-end',
       )}
     >
       {items.map((i) => (

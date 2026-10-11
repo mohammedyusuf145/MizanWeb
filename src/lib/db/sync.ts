@@ -88,11 +88,22 @@ export class SyncEngine {
     useSyncStatus.setState({ state: 'syncing' });
     try {
       await this.flush();
+      await this.runTasks();
       await this.pull();
       useSyncStatus.setState({ state: 'idle', lastSyncedAt: new Date().toISOString() });
     } catch (err) {
       useSyncStatus.setState({ state: navigator.onLine ? 'error' : 'offline' });
       if (import.meta.env.DEV) console.warn('[sync]', err);
+    }
+  }
+
+  private async runTasks() {
+    for (const task of tasks) {
+      try {
+        await task(this.client, this.userId);
+      } catch (err) {
+        if (import.meta.env.DEV) console.warn('[sync task]', err);
+      }
     }
   }
 
@@ -102,6 +113,7 @@ export class SyncEngine {
       if (!navigator.onLine) return useSyncStatus.setState({ state: 'offline' });
       useSyncStatus.setState({ state: 'syncing' });
       this.flush()
+        .then(() => this.runTasks())
         .then(() => useSyncStatus.setState({ state: 'idle', lastSyncedAt: new Date().toISOString() }))
         .catch(() => useSyncStatus.setState({ state: navigator.onLine ? 'error' : 'offline' }));
     }, 400);
@@ -203,6 +215,15 @@ export class SyncEngine {
   private table(name: TableName): Table<AnyRow, string> {
     return this.db[name] as unknown as Table<AnyRow, string>;
   }
+}
+
+type SyncTask = (client: SupabaseClient, userId: string) => Promise<void>;
+const tasks = new Set<SyncTask>();
+
+/** Extra work to run after each successful push, e.g. uploading attachment files. */
+export function registerSyncTask(task: SyncTask): () => void {
+  tasks.add(task);
+  return () => tasks.delete(task);
 }
 
 let engine: SyncEngine | null = null;
