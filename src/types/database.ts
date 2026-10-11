@@ -143,6 +143,15 @@ export interface Flashcard extends BaseRow {
   due_at: ISODate;
 }
 
+/** Per-subject accuracy on a topic: the tutor's quizzes feed this to find weak spots. */
+export interface StudyTopic extends BaseRow {
+  subject_id: UUID | null;
+  topic: string;
+  attempts: number;
+  correct: number;
+  last_seen_at: ISODate | null;
+}
+
 export interface TableMap {
   profiles: Profile;
   settings: Settings;
@@ -157,6 +166,7 @@ export interface TableMap {
   chat_threads: ChatThread;
   chat_messages: ChatMessage;
   flashcards: Flashcard;
+  study_topics: StudyTopic;
 }
 
 export type TableName = keyof TableMap;
@@ -175,4 +185,5 @@ export const SYNCED_TABLES: TableName[] = [
   'chat_threads',
   'chat_messages',
   'flashcards',
+  'study_topics',
 ];

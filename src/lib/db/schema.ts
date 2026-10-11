@@ -69,5 +69,6 @@ export function openDatabase(userId: string): MizanDB {
   });
   db.version(2).stores({ files: 'id, uploaded' });
   db.version(3).stores({ inbox: 'key, fired_at, read, card_id' });
+  db.version(4).stores({ study_topics: 'id, subject_id' });
   return db;
 }
