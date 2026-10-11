@@ -1,0 +1,187 @@
+@import 'tailwindcss';
+@import './design/tokens.css';
+
+@custom-variant rtl (&:where([dir='rtl'], [dir='rtl'] *));
+
+/* Expose tokens to Tailwind utilities (bg-surface-2, text-text-2, rounded-card …) */
+@theme inline {
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-bg: var(--bg);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success: var(--success);
+
+  --font-sans: var(--font-latin);
+  --font-mono: var(--font-num);
+
+  --shadow-pop: var(--elev-pop);
+  --shadow-sheet: var(--elev-sheet);
+
+  --ease-standard: var(--motion-standard);
+  --ease-exit: var(--motion-exit);
+  --ease-emphasized: var(--motion-emphasized);
+}
+
+@theme {
+  /* Type scale: 12 · 13 · 14 · 16 · 18 · 22 · 28 · 36 · 48 · 96 · 160 */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 20px;
+  --text-base: 14px;
+  --text-base--line-height: 20px;
+  --text-md: 16px;
+  --text-md--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 22px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 28px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 36px;
+  --text-3xl--line-height: 40px;
+  --text-4xl: 48px;
+  --text-4xl--line-height: 52px;
+  --text-clock: 96px;
+  --text-clock--line-height: 1;
+  --text-clock-xl: 160px;
+  --text-clock-xl--line-height: 1;
+
+  /* Radius by role */
+  --radius-chip: 4px;
+  --radius-control: 6px;
+  --radius-card: 6px;
+  --radius-pop: 10px;
+  --radius-sheet: 14px;
+
+  /* Breakpoints */
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1600px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-latin);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :lang(ar) {
+    font-family: var(--font-arabic);
+    line-height: 1.75;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Scrollbars that sit back */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+}
+
+@layer utilities {
+  .raised {
+    box-shadow: inset 0 1px 0 0 var(--highlight);
+  }
+  .flip-rtl:where([dir='rtl'] *) {
+    transform: scaleX(-1);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Motion primitives (Radix sets data-state="open|closed") ───────────────── */
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(4px) scale(0.98); } }
+@keyframes pop-out { to { opacity: 0; transform: translateY(4px) scale(0.98); } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes dialog-out { to { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes sheet-in-end { from { transform: translateX(var(--sheet-from, 100%)); } }
+@keyframes sheet-out-end { to { transform: translateX(var(--sheet-from, 100%)); } }
+@keyframes sheet-in-bottom { from { transform: translateY(100%); } }
+@keyframes sheet-out-bottom { to { transform: translateY(100%); } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shimmer { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+[dir='rtl'] { --sheet-from: -100%; }
+
+.anim-overlay[data-state='open'] { animation: fade-in var(--dur-base) var(--motion-standard); }
+.anim-overlay[data-state='closed'] { animation: fade-out var(--dur-fast) var(--motion-exit); }
+.anim-pop[data-state='open'], .anim-pop[data-state='delayed-open'] { animation: pop-in var(--dur-base) var(--motion-standard); }
+.anim-pop[data-state='closed'] { animation: pop-out var(--dur-fast) var(--motion-exit); }
+.anim-dialog[data-state='open'] { animation: dialog-in var(--dur-slow) var(--motion-emphasized); }
+.anim-dialog[data-state='closed'] { animation: dialog-out var(--dur-fast) var(--motion-exit); }
+.anim-sheet-end[data-state='open'] { animation: sheet-in-end var(--dur-sheet) var(--motion-emphasized); }
+.anim-sheet-end[data-state='closed'] { animation: sheet-out-end var(--dur-base) var(--motion-exit); }
+.anim-sheet-bottom[data-state='open'] { animation: sheet-in-bottom var(--dur-sheet) var(--motion-emphasized); }
+.anim-sheet-bottom[data-state='closed'] { animation: sheet-out-bottom var(--dur-base) var(--motion-exit); }
+.anim-toast { animation: toast-in var(--dur-slow) var(--motion-emphasized); }
+.anim-spin { animation: spin 0.9s linear infinite; }
+.anim-shimmer { animation: shimmer 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-sheet-end[data-state='open'], .anim-sheet-bottom[data-state='open'],
+  .anim-dialog[data-state='open'], .anim-pop[data-state='open'], .anim-toast {
+    animation: fade-in var(--dur-base) linear;
+  }
+  .anim-spin { animation: spin 1.6s linear infinite !important; animation-iteration-count: infinite !important; }
+}

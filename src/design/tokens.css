@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Mizan design tokens — the single source of truth.
+   Raw values live on :root[data-theme]; Tailwind reads them through @theme.
+   Contrast (WCAG AA) was checked for every text/surface pair listed here.
+   ========================================================================== */
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces: depth by lightness, never pure black */
+  --bg: #0b0c0f;
+  --surface-1: #111317;
+  --surface-2: #171a1f;
+  --surface-3: #1f232a;
+  --surface-overlay: rgb(5 6 8 / 0.64);
+  --highlight: rgb(255 255 255 / 0.04); /* 1px top edge on raised surfaces */
+
+  --border: rgb(255 255 255 / 0.06);
+  --border-strong: rgb(255 255 255 / 0.11);
+
+  /* Text */
+  --text: #ecedef;   /* 14.9:1 on surface-2 */
+  --text-2: #a4a9b2; /*  7.4:1 */
+  --text-3: #858b95; /*  5.1:1 */
+
+  /* Accent: Verdigris */
+  --accent: #5cc8a8;
+  --accent-hover: #6fd4b5;
+  --accent-ink: #06221a; /* text on accent, 8.2:1 */
+  --accent-soft: rgb(92 200 168 / 0.12);
+  --accent-text: #5cc8a8; /* accent used as text */
+
+  /* States */
+  --danger: #f07a6e;
+  --danger-soft: rgb(240 122 110 / 0.12);
+  --warning: #e5b45a;
+  --warning-soft: rgb(229 180 90 / 0.12);
+  --success: #7bc88f;
+
+  /* Elevation: only floating layers get a shadow */
+  --elev-pop: 0 1px 0 0 var(--highlight) inset, 0 12px 32px -8px rgb(0 0 0 / 0.6),
+    0 2px 6px rgb(0 0 0 / 0.4);
+  --elev-sheet: 0 1px 0 0 var(--highlight) inset, 0 24px 64px -12px rgb(0 0 0 / 0.7);
+
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  /* Subject colours are applied raw on dark */
+  --subject-mix: 100%;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f6f5f2;
+  --surface-1: #efeeea;
+  --surface-2: #ffffff;
+  --surface-3: #e9e7e2;
+  --surface-overlay: rgb(20 22 26 / 0.32);
+  --highlight: rgb(255 255 255 / 0.7);
+
+  --border: rgb(20 22 26 / 0.08);
+  --border-strong: rgb(20 22 26 / 0.14);
+
+  --text: #15171b;
+  --text-2: #4c525c;
+  --text-3: #5f656f;
+
+  --accent: #0c6e58;
+  --accent-hover: #0a5e4b;
+  --accent-ink: #ffffff;
+  --accent-soft: rgb(12 110 88 / 0.1);
+  --accent-text: #0c6e58;
+
+  --danger: #b4382b;
+  --danger-soft: rgb(180 56 43 / 0.08);
+  --warning: #8a5a00;
+  --warning-soft: rgb(138 90 0 / 0.08);
+  --success: #2f7a45;
+
+  --elev-pop: 0 12px 32px -8px rgb(20 22 26 / 0.16), 0 2px 6px rgb(20 22 26 / 0.08);
+  --elev-sheet: 0 24px 64px -12px rgb(20 22 26 / 0.24);
+
+  /* Subject colours are darkened on paper so dots and text stay legible */
+  --subject-mix: 64%;
+}
+
+:root {
+  /* Typography */
+  --font-latin: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-num: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Motion */
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 240ms;
+  --dur-sheet: 300ms;
+  --motion-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* Layout */
+  --sidebar-w: 248px;
+  --sidebar-w-collapsed: 64px;
+  --bottombar-h: 64px;
+  --content-max: 1680px;
+
+  /* Layers */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-overlay: 40;
+  --z-sheet: 50;
+  --z-palette: 60;
+  --z-toast: 70;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 120ms;
+    --dur-slow: 120ms;
+    --dur-sheet: 120ms;
+  }
+}
