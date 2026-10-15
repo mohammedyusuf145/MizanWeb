@@ -3,8 +3,9 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 4 of 6 — focus timer, Focus Garden and stats, on top of the calendar and reminders (Phase 3),
-> the board (Phase 2) and the foundation (Phase 1).
+> **Status:** Phase 5 of 6 — the AI tutor and a full redesign ("Pearl & Tide"), on top of the focus timer and stats
+> (Phase 4), calendar and reminders (Phase 3), the board (Phase 2) and the foundation (Phase 1).
+> Repository: [github.com/mohammedyusuf145/MizanWeb](https://github.com/mohammedyusuf145/MizanWeb).
 
 ## Using the board
 
@@ -97,6 +98,49 @@ any setup. To receive them when the app is closed (web push):
   a weekly summary. Subject colours come from a 10-slot palette validated for both themes (lightness band, chroma,
   colour-blind separation of neighbours, contrast); charts stack subjects in that fixed order.
 
+## AI tutor
+
+The tutor lives at **/tutor**: chats per subject, with a side panel showing what's coming up, weak topics and flashcards due.
+
+- **Explanation styles:** simple, step by step, analogy, exam focus. *I still don't get it* asks for a different, simpler
+  explanation; *Show full solution* asks for the worked answer (the tutor gives hints first).
+- **Inputs:** typed or pasted text, photos (downscaled on the device), PDFs and text files. Photos and PDFs are uploaded
+  once to the Anthropic Files API, so the stored conversation only keeps a file id.
+- **Tools (run on your device):** it can read your upcoming cards and exams; it can **propose** new cards or changes to a
+  card, which appear as a card in the chat and only happen when you press *Add to board* / *Apply change*.
+- **Quizzes:** multiple choice (checked on the device), short answer and step-by-step; the tutor marks them, explains
+  mistakes and records results per topic, which feeds *Needs practice*.
+- **Flashcards:** saved from chat or made from your notes (*Make from notes*, uses the lighter model), reviewed with
+  spaced repetition (SM-2, keys Space / 1–4). Flashcard review works offline and in demo mode.
+- **Study plans:** give it an exam date and topics; it proposes a schedule and offers to add it as cards.
+- Answers stream token by token; Markdown, code and LaTeX math (KaTeX) render correctly inside Arabic text.
+
+### Set up the tutor (needs Supabase)
+
+1. Apply `supabase/migrations/20261011000006_tutor.sql` (adds `study_topics`, `ai_usage`, `tutor_files`).
+2. Set the secrets and deploy the function:
+   ```bash
+   npx supabase secrets set ANTHROPIC_API_KEY=sk-ant-...      # never in a VITE_ variable
+   npx supabase secrets set TUTOR_MODEL=claude-sonnet-5-5 TUTOR_MODEL_LIGHT=claude-haiku-5-5
+   npx supabase secrets set TUTOR_DAILY_MESSAGE_CAP=60 TUTOR_DAILY_TOKEN_CAP=150000 TUTOR_PER_MINUTE=12
+   npx supabase functions deploy tutor
+   ```
+   Optional: `TUTOR_EFFORT` (`low`…`max`, default `medium`), `TUTOR_MAX_OUTPUT_TOKENS` (default 12000),
+   `TUTOR_FALLBACK=off` to disable the server-side refusal fallback. Switching to Opus later is one secret:
+   `TUTOR_MODEL=claude-opus-5-5`.
+
+**How it stays safe:** the function verifies your login, applies a per-minute limit and daily message and token caps
+(atomic, in Postgres), rebuilds every message from an allow-list (no client-supplied system prompt, tools or options),
+checks file types and sizes, and logs only status codes, never content or keys. The system prompt is fixed and
+written for teenagers (hints first, honest about uncertainty, age-appropriate, points to a trusted adult or 999 when
+someone may be at risk).
+
+## Appearance, sound and motion
+
+**Settings → Appearance:** dark ("Tide") or light ("Pearl") or match the device; accent colour (saffron, pearl teal,
+coral, iris); text size; motion (match device, full, reduced). **Sound and feel:** short synthesised tones when you
+complete a task, add a card or get an answer, with volume and phone vibration. These are saved on the device.
+
 ## Scripts
 
 | Command | What it does |
@@ -106,7 +150,7 @@ any setup. To receive them when the app is closed (web push):
 | `npm run preview` | Serve the production build |
 | `npm test` | Unit tests (Vitest) |
 | `npm run typecheck` | TypeScript only |
-| `npx deno test --allow-env supabase/functions/send-reminders` | Edge Function tests (Deno) |
+| `npx deno test --allow-env supabase/functions/` | Edge Function tests (Deno: reminders, tutor validation) |
 
 ## How it fits together
 
@@ -122,7 +166,7 @@ UI (React) ──reads──▶ IndexedDB (Dexie, live queries)      ← every s
   than the stored row, and the client applies the same rule when merging incoming rows.
 - **Deletes are soft** (`deleted_at`), so deletions sync like any other change.
 - **`server_updated_at`** (server clock) is used only as the pull cursor, so a device with a wrong clock never misses changes.
-- **Claude API** is only ever called from a Supabase Edge Function (Phase 5). The key never reaches the browser.
+- **Claude API** is only ever called from the `tutor` Edge Function. The key never reaches the browser.
 
 ## Folder structure
 
@@ -133,13 +177,15 @@ src/
   components/ui/  Button, IconButton, Field/Input/Select/Textarea, Dialog, Sheet, Tabs,
                   Checkbox/Switch, Segmented, Menu/Popover, Badge, Kbd, Skeleton,
                   ProgressRing/Bar, EmptyState/ErrorState, Toast
-  features/       cards, subjects, settings, onboarding (calendar, timer, tutor… in later phases)
-  lib/            db/ (Dexie schema, repo, sync engine, LWW merge), auth, i18n, dates, theme, supabase
+  features/       boards, cards, calendar, reminders, timer, stats, subjects, settings, onboarding,
+                  tutor (engine, tools, SRS, protocol, ui/)
+  lib/            db/ (Dexie schema, repo, sync engine, LWW merge), auth, i18n, dates, theme,
+                  prefs (accent, motion, sounds), uiSound, supabase
   locales/        en.ts, ar.ts (typed: a missing Arabic key is a compile error)
   routes/         one lazily-loaded module per page
 supabase/
-  migrations/     core schema, RLS, storage bucket, realtime publication, reminders + push
-  functions/      _shared (CORS, JWT check), delete-account, send-reminders (web push)
+  migrations/     core schema, RLS, storage bucket, realtime publication, reminders + push, tutor
+  functions/      _shared (CORS, JWT check), delete-account, send-reminders (web push), tutor (Claude)
   cron/           one-off SQL to schedule send-reminders with pg_cron
 ```
 
@@ -148,6 +194,13 @@ supabase/
 Open **`/design`** in the app (or *Design system* in the ⌘K / Ctrl+K palette) to see every token and component.
 Switch language and theme from the palette to check RTL and light mode.
 
-- Surfaces `#0B0C0F → #1F232A`, text `#ECEDEF / #A4A9B2 / #858B95`, accent **Verdigris `#5CC8A8`** — all pairs checked for WCAG AA.
-- Geist + IBM Plex Sans Arabic, Geist Mono for numbers. 8px grid. Radius by role (4 / 6 / 10 / 14).
-- Motion 120–300ms with `cubic-bezier(0.2, 0, 0, 1)`; collapses to short fades under `prefers-reduced-motion`.
+Concept **Pearl & Tide**: the Gulf at night and pearl nacre, with saffron gold from the souq. The app sits on a
+canvas laid over a darker frame, like a sheet on a designer's desk.
+
+- Dark: frame `#08101F`, canvas `#0E182B`, surfaces `#111D33 → #1D2C4A`, text `#EEF2FA / #AEB9CF / #8794AE`.
+  Light: frame `#E4E9F2`, canvas `#F5F7FB`, cards `#FFFFFF`, text `#0E1830 / #46526B / #5B6781`.
+  Accent saffron `#F0B54A` (dark) / `#E3A21A` (light) plus three alternatives; every pair is checked for WCAG AA.
+- The pearl gradient appears only on the logo, the tutor and the welcome moment.
+- Type: Readex Pro for text in both scripts; Bricolage Grotesque (Latin) and Reem Kufi (Arabic) for headings.
+- Radius by role (6 / 10 / 12 / 14 / 20 / 22). Motion uses a soft out-expo curve (140–420ms) and Motion springs for
+  the sliding nav pill, cards and the flashcard flip; everything falls back to fades under reduced motion.

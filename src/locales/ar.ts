@@ -350,6 +350,9 @@ export const ar: Dict = {
   'fc.in.h': "{n} س",
   'fc.in.d': "{n} ي",
   'fc.keys': "المسافة تعرض الإجابة؛ و1–4 للتقييم.",
+  'welcome.subject.math': "الرياضيات",
+  'welcome.subject.physics': "الفيزياء",
+  'welcome.subject.arabic': "اللغة العربية",
   'settings.saved': 'تم الحفظ',
 
   'day.0': 'الأحد',

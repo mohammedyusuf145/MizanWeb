@@ -101,14 +101,14 @@ function Controls({ state, large }: { state: TimerState; large?: boolean }) {
         variant="primary"
         size="lg"
         onClick={() => timer.toggle()}
-        iconStart={state.status === 'running' ? <Pause size={18} /> : <Play size={18} className="flip-rtl" />}
+        iconStart={state.status === 'running' ? <Pause size={18} /> : <Play size={18} />}
         className={cn('min-w-44 rounded-full', large && 'h-14 min-w-52 text-lg')}
         aria-keyshortcuts="Space"
       >
         {primaryLabel}
       </Button>
       {!open ? (
-        <IconButton label={t('focus.skip')} icon={<SkipForward size={18} className="flip-rtl" />} onClick={() => timer.skip()} size="lg" />
+        <IconButton label={t('focus.skip')} icon={<SkipForward size={18} />} onClick={() => timer.skip()} size="lg" />
       ) : (
         <span className="size-12" />
       )}

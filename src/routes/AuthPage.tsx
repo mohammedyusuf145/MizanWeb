@@ -6,6 +6,7 @@ import { signInWithEmail, signInWithGoogle, signUpWithEmail, startDemo, type Aut
 import { Button, Field, Input, Segmented } from '@/components/ui';
 import { LogoMark } from '@/app/shell/Logo';
 import { WelcomePreview } from './WelcomePreview';
+import { BalanceMark } from '@/app/shell/BalanceMark';
 
 export function AuthPage() {
   const t = useT();
@@ -44,7 +45,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="grid min-h-dvh lg:grid-cols-[minmax(0,560px)_1fr]">
+    <div className="grid min-h-dvh bg-frame lg:grid-cols-[minmax(0,560px)_1fr]">
       <div className="flex flex-col px-6 py-6 md:px-12 md:py-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -64,7 +65,10 @@ export function AuthPage() {
 
         <div className="flex flex-1 flex-col justify-center py-12">
           <div className="w-full max-w-[400px]">
-            <h1 className="text-3xl font-semibold tracking-tight text-text text-balance">{t('auth.title')}</h1>
+            <span className="mb-6 block lg:hidden">
+              <BalanceMark size={96} />
+            </span>
+            <h1 className="font-display text-4xl font-semibold text-text text-balance md:text-[52px] md:leading-[56px]">{t('auth.title')}</h1>
             <p className="mt-3 text-md text-text-2">{t('auth.subtitle')}</p>
 
             {hasBackend ? (

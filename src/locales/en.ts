@@ -345,6 +345,9 @@ export const en = {
   'fc.in.h': "{n} h",
   'fc.in.d': "{n} d",
   'fc.keys': "Space shows the answer; 1–4 grade it.",
+  'welcome.subject.math': "Mathematics",
+  'welcome.subject.physics': "Physics",
+  'welcome.subject.arabic': "Arabic",
   'settings.saved': 'Saved',
 
   'day.0': 'Sunday',
