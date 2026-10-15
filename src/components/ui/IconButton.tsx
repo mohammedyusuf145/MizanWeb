@@ -24,7 +24,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       aria-label={label}
       className={cn(
         'inline-flex shrink-0 items-center justify-center rounded-control text-text-2',
-        'transition-colors duration-[var(--dur-fast)] ease-standard hover:bg-surface-3 hover:text-text',
+        'transition-[background-color,color,transform] duration-[var(--dur-fast)] ease-standard hover:bg-surface-3 hover:text-text active:scale-[0.94]',
         'disabled:pointer-events-none disabled:opacity-50',
         active && 'bg-surface-3 text-text',
         sizes[size],

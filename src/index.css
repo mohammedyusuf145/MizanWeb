@@ -227,7 +227,7 @@
 .prose-mizan h1 { font-size: 18px; }
 .prose-mizan h2 { font-size: 16px; }
 .prose-mizan h3 { font-size: 14px; }
-.prose-mizan ul, .prose-mizan ol { padding-inline-start: 1.25em; }
+.prose-mizan ul, .prose-mizan ol { padding-inline: 1.25em; }
 .prose-mizan ul { list-style: disc; }
 .prose-mizan ol { list-style: decimal; }
 .prose-mizan li + li { margin-top: 0.25em; }
@@ -259,3 +259,16 @@
   animation-iteration-count: 1 !important;
 }
 :root[data-motion='reduce'] .anim-spin { animation: spin 1.6s linear infinite !important; }
+
+/* Math inside Arabic or English prose: formulas stay LTR and isolated from the surrounding bidi run. */
+.prose-math .katex { direction: ltr; unicode-bidi: isolate; font-size: 1.08em; }
+.prose-math .katex-display { direction: ltr; overflow-x: auto; overflow-y: hidden; padding: 6px 2px; margin: 0.6em 0; }
+.prose-math .katex-display > .katex { text-align: center; }
+:root[data-motion='reduce'] [class*='active:scale-']:active { transform: none !important; }
+@media (prefers-reduced-motion: reduce) { [class*='active:scale-']:active { transform: none !important; } }
+
+/* Tutor: a soft caret while the answer streams, and the pearl "thinking" bead. */
+@keyframes caret { 50% { opacity: 0; } }
+.stream-caret::after { content: ''; display: inline-block; width: 0.5em; height: 1em; margin-inline-start: 2px; vertical-align: -0.15em; border-radius: 2px; background: var(--accent); animation: caret 1s steps(1) infinite; }
+@keyframes bead { 0%, 100% { transform: scale(0.85); opacity: 0.6; } 50% { transform: scale(1); opacity: 1; } }
+.pearl-bead { background: var(--pearl); animation: bead 1.4s var(--motion-standard) infinite; }

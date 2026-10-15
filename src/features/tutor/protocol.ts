@@ -41,8 +41,8 @@ export interface StoredContent {
     stop_reason?: string | null;
     refusal?: { category: string | null } | null;
     model?: string;
-    /** Results of tools that ran automatically, waiting to be sent with an interactive tool's result. */
-    autoResults?: Record<string, { content: string; is_error?: boolean }>;
+    /** Results for this turn's tool calls, gathered until all are in (auto tools + the student's decisions). */
+    toolResults?: Record<string, { content: string; is_error?: boolean }>;
   };
 }
 
