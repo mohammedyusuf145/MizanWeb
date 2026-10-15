@@ -16,7 +16,7 @@ export function FocusIndicator({ compact }: { compact?: boolean }) {
     return (
       <span
         aria-label={label}
-        className={`absolute end-1 top-0.5 size-2 rounded-full ${paused ? 'bg-text-3' : 'bg-accent'} ring-2 ring-[var(--surface-1)]`}
+        className={`absolute -end-1 -top-0.5 size-2 rounded-full ${paused ? "bg-text-3" : "bg-accent"} ring-2 ring-[var(--frame)]`}
       />
     );
   return (

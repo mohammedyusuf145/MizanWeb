@@ -15,13 +15,13 @@ export function PageHeader({ title, meta, actions }: { title: ReactNode; meta?: 
   const t = useT();
   const openPalette = usePalette((s) => s.setOpen);
   return (
-    <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-[color-mix(in_oklab,var(--bg),transparent_6%)] backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-[var(--content-max)] items-center gap-3 px-4 md:h-16 md:px-8">
+    <header className="sticky top-0 z-[var(--z-sticky)] border-b border-border bg-[color-mix(in_oklab,var(--bg),transparent_8%)] backdrop-blur-xl md:rounded-t-[var(--radius-canvas)]">
+      <div className="mx-auto flex h-14 max-w-[var(--content-max)] items-center gap-3 px-4 md:h-[68px] md:px-8">
         <span className="md:hidden">
           <LogoMark size={24} />
         </span>
         <div className="flex min-w-0 flex-1 items-baseline gap-3">
-          {typeof title === 'string' ? <h1 className="truncate text-lg font-semibold text-text md:text-xl">{title}</h1> : title}
+          {typeof title === 'string' ? <h1 className="truncate font-display text-xl font-semibold text-text md:text-2xl">{title}</h1> : title}
           {meta && <div className="hidden truncate text-sm text-text-3 sm:block">{meta}</div>}
         </div>
         {actions}

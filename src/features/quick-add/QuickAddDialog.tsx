@@ -1,3 +1,4 @@
+import { playUi } from '@/lib/uiSound';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Dialog as D } from 'radix-ui';
 import { Check, CornerDownLeft, Plus } from 'lucide-react';
@@ -67,6 +68,7 @@ export function QuickAddDialog() {
       estimate_min: parsed.estimateMin,
     });
     setLastAdded(title);
+    playUi('create');
     setText('');
     setNow(new Date());
     inputRef.current?.focus();

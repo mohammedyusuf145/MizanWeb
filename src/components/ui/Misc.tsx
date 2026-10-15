@@ -23,9 +23,9 @@ export function Badge({
   );
 }
 
-export function Kbd({ children }: { children: ReactNode }) {
+export function Kbd({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded-chip border border-border-strong bg-surface-1 px-1 font-mono text-[11px] text-text-2" dir="ltr">
+    <kbd className={`inline-flex h-5 min-w-5 items-center justify-center rounded-[5px] border border-border-strong bg-surface-1 px-1 font-sans text-[11px] text-text-2 ${className ?? ''}`} dir="ltr">
       {children}
     </kbd>
   );

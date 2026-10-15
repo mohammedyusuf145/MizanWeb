@@ -5,6 +5,7 @@
 import { getDb } from '@/lib/db';
 import { newId, softDelete, upsert, upsertMany } from '@/lib/db/repo';
 import { getT } from '@/lib/i18n';
+import { playUi } from '@/lib/uiSound';
 import type { Board, Card, ChecklistItem, Column } from '@/types/database';
 import { nextOccurrence } from '@/features/cards/repeat';
 import { byPosition, positionAt, positionBetween, positionsAfter } from './position';
@@ -131,7 +132,10 @@ export async function moveCard(cardId: string, toColumnId: string, prevId: strin
     board_id: column.board_id,
     position: positionBetween(prev?.position, next?.position),
   };
-  if (isDone && !wasDone) patch.completed_at = new Date().toISOString();
+  if (isDone && !wasDone) {
+    patch.completed_at = new Date().toISOString();
+    playUi('complete');
+  }
   if (!isDone && wasDone) patch.completed_at = null;
 
   if (isDone && !wasDone && card.repeat_rule && card.due_at) {
@@ -154,6 +158,7 @@ export async function setCardDone(card: Card, done: boolean) {
   if (!target) return;
   if (target.id === card.column_id) {
     await updateCard(card.id, { completed_at: done ? new Date().toISOString() : null });
+    if (done) playUi('complete');
     return;
   }
   // Lands at the top of the target column.

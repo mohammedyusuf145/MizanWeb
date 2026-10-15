@@ -9,6 +9,7 @@
   --color-white: #fff;
   --color-black: #000;
   --color-bg: var(--bg);
+  --color-frame: var(--frame);
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
@@ -30,9 +31,12 @@
 
   --font-sans: var(--font-latin);
   --font-mono: var(--font-num);
+  --font-display: var(--font-display);
 
   --shadow-pop: var(--elev-pop);
   --shadow-sheet: var(--elev-sheet);
+  --shadow-card: var(--elev-card);
+  --shadow-lift: var(--elev-lift);
 
   --ease-standard: var(--motion-standard);
   --ease-exit: var(--motion-exit);
@@ -65,11 +69,12 @@
   --text-clock-xl--line-height: 1;
 
   /* Radius by role */
-  --radius-chip: 4px;
-  --radius-control: 6px;
-  --radius-card: 6px;
-  --radius-pop: 10px;
-  --radius-sheet: 14px;
+  --radius-chip: 6px;
+  --radius-control: 10px;
+  --radius-card: 12px;
+  --radius-pop: 14px;
+  --radius-sheet: 20px;
+  --radius-canvas: 22px;
 
   /* Breakpoints (all in px so Tailwind orders them correctly) */
   --breakpoint-sm: 640px;
@@ -97,11 +102,18 @@
   }
   :lang(ar) {
     font-family: var(--font-arabic);
-    line-height: 1.75;
+    line-height: 1.7;
   }
+  html { background: var(--frame); }
+  h1, h2, .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+  :lang(ar) h1, :lang(ar) h2, :lang(ar) .font-display { letter-spacing: 0; }
   body {
     min-height: 100dvh;
-    background: var(--bg);
+    background: var(--frame);
     overflow-x: hidden;
   }
   ::selection {
@@ -115,6 +127,10 @@
   }
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+  /* Smooth theme switch: colours cross-fade instead of snapping. */
+  html.theme-fade, html.theme-fade * {
+    transition: background-color 360ms var(--motion-standard), border-color 360ms var(--motion-standard), color 360ms var(--motion-standard), fill 360ms, stroke 360ms !important;
   }
   /* Scrollbars that sit back */
   * {
@@ -130,6 +146,21 @@
   .flip-rtl:where([dir='rtl'] *) {
     transform: scaleX(-1);
   }
+  .pearl {
+    background: var(--pearl);
+  }
+  .press {
+    transition: transform var(--dur-fast) var(--motion-standard);
+  }
+  .press:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .lift {
+    transition: transform var(--dur-base) var(--motion-standard), box-shadow var(--dur-base) var(--motion-standard), border-color var(--dur-fast);
+  }
+  @media (hover: hover) {
+    .lift:hover { transform: translateY(-1px); box-shadow: var(--elev-lift); }
+  }
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -139,6 +170,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lift:hover, .press:active { transform: none !important; }
   *,
   *::before,
   *::after {
@@ -151,9 +183,9 @@
 /* ── Motion primitives (Radix sets data-state="open|closed") ───────────────── */
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes fade-out { to { opacity: 0; } }
-@keyframes pop-in { from { opacity: 0; transform: translateY(4px) scale(0.98); } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(6px) scale(0.97); } }
 @keyframes pop-out { to { opacity: 0; transform: translateY(4px) scale(0.98); } }
-@keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
 @keyframes dialog-out { to { opacity: 0; transform: translateY(8px) scale(0.98); } }
 @keyframes sheet-in-end { from { transform: translateX(var(--sheet-from, 100%)); } }
 @keyframes sheet-out-end { to { transform: translateX(var(--sheet-from, 100%)); } }
@@ -191,7 +223,7 @@
 .prose-mizan { color: var(--text); font-size: 14px; line-height: 1.65; overflow-wrap: anywhere; }
 .prose-mizan:lang(ar), [dir='rtl'] .prose-mizan { line-height: 1.85; }
 .prose-mizan > * + * { margin-top: 0.75em; }
-.prose-mizan h1, .prose-mizan h2, .prose-mizan h3 { font-weight: 600; line-height: 1.3; margin-top: 1.25em; }
+.prose-mizan h1, .prose-mizan h2, .prose-mizan h3 { font-family: var(--font-latin); font-weight: 600; line-height: 1.3; margin-top: 1.25em; }
 .prose-mizan h1 { font-size: 18px; }
 .prose-mizan h2 { font-size: 16px; }
 .prose-mizan h3 { font-size: 14px; }
@@ -202,7 +234,7 @@
 .prose-mizan li::marker { color: var(--text-3); }
 .prose-mizan a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
 .prose-mizan code { font-family: var(--font-num); font-size: 0.9em; background: var(--surface-3); border-radius: 4px; padding: 0.1em 0.35em; }
-.prose-mizan pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 12px; overflow-x: auto; direction: ltr; text-align: left; }
+.prose-mizan pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; overflow-x: auto; direction: ltr; text-align: left; }
 .prose-mizan pre code { background: none; padding: 0; }
 .prose-mizan blockquote { border-inline-start: 2px solid var(--border-strong); padding-inline-start: 12px; color: var(--text-2); }
 .prose-mizan table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -221,3 +253,9 @@
 @media (prefers-reduced-motion: reduce) {
   .garden-sway { animation: none; }
 }
+
+:root[data-motion='reduce'] *, :root[data-motion='reduce'] *::before, :root[data-motion='reduce'] *::after {
+  animation-duration: 1ms !important;
+  animation-iteration-count: 1 !important;
+}
+:root[data-motion='reduce'] .anim-spin { animation: spin 1.6s linear infinite !important; }

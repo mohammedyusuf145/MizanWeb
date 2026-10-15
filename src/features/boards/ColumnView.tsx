@@ -55,7 +55,7 @@ export function ColumnView(props: Props) {
       style={style}
       aria-labelledby={`grp-${group.id}`}
       className={cn(
-        'flex max-h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col md:w-[300px] xl:w-[320px]',
+        'flex max-h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col rounded-[18px] border border-border bg-surface-1 p-2 md:w-[300px] xl:w-[320px]',
         sortable.isDragging && 'opacity-40',
       )}
     >
@@ -87,7 +87,7 @@ function ColumnHeader({
   };
 
   return (
-    <header className="group/head mb-2 flex h-9 items-center gap-1.5 ps-1">
+    <header className="group/head mb-1 flex h-10 items-center gap-1.5 ps-2">
       {handle && (
         <button
           type="button"
@@ -120,13 +120,13 @@ function ColumnHeader({
       ) : (
         <h2
           id={`grp-${group.id}`}
-          className="min-w-0 truncate text-sm font-medium text-text-2"
+          className="min-w-0 truncate text-base font-semibold text-text"
           onDoubleClick={() => column && setEditing(true)}
         >
           {group.title}
         </h2>
       )}
-      {!editing && <span className="text-xs text-text-3 tabular">{ids.length}</span>}
+      {!editing && <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-3 px-1.5 text-[11px] font-medium text-text-2 tabular">{ids.length}</span>}
       <span className="flex-1" />
       {column && !editing && (
         <Menu>
@@ -217,7 +217,7 @@ function ColumnBody({ group, ids, cardById, subjectById, meta, boardId, onOpenCa
           )}
         >
           {ids.length === 0 ? (
-            <p className="flex h-[68px] items-center rounded-card border border-dashed border-border px-4 text-sm text-text-3">
+            <p className="flex h-[68px] items-center rounded-card border border-dashed border-border-strong px-4 text-sm text-text-3">
               {group.droppable ? t('col.dropHere') : t('board.emptyColumn')}
             </p>
           ) : (

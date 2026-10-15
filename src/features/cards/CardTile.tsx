@@ -18,8 +18,9 @@ const dueTone = {
 };
 
 /**
- * Board card (presentational). Subject colour is a bar on the inline-start edge;
- * exams get a thicker bar and a flag. Done cards recede instead of being struck through.
+ * Board card (presentational). The subject leads as a tinted tag, the title carries the weight,
+ * and logistics (due, checklist, time) sit quietly below. Exams wear a flag in the subject's colour.
+ * Done cards recede instead of being struck through.
  */
 export function CardTile({
   card,
@@ -47,14 +48,35 @@ export function CardTile({
   return (
     <div
       className={cn(
-        'relative rounded-card border bg-surface-2 py-3 ps-4 pe-3 raised transition-[border-color,background-color,box-shadow] duration-[var(--dur-fast)]',
+        'relative rounded-card border bg-surface-2 px-3.5 py-3 shadow-card transition-[border-color,background-color,box-shadow,transform] duration-[var(--dur-base)] ease-standard',
         card.is_exam && !done ? 'border-border-strong' : 'border-border',
-        lifted ? 'scale-[1.02] border-border-strong bg-surface-3 shadow-pop' : 'group-hover/card:border-border-strong',
+        lifted
+          ? 'rotate-[1.5deg] scale-[1.03] border-border-strong bg-surface-3 shadow-lift'
+          : 'group-hover/card:-translate-y-px group-hover/card:border-border-strong group-hover/card:shadow-lift',
+        done && 'bg-[color-mix(in_oklab,var(--surface-2),var(--surface-1)_60%)] shadow-none',
         className,
       )}
     >
-      <span aria-hidden className="absolute inset-y-2.5 start-0 rounded-full" style={{ background: color, width: card.is_exam ? 4 : 3, opacity: done ? 0.5 : 1 }} />
-      <h3 className={cn('text-base leading-snug break-words', done ? 'text-text-3' : 'text-text')} dir="auto">
+      {(subject || card.is_exam) && (
+        <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+          {subject && (
+            <span
+              className="inline-flex h-[22px] max-w-full min-w-0 items-center gap-1.5 rounded-full px-2 text-[11px] font-medium"
+              style={{ background: `color-mix(in oklab, ${subject.color} 16%, transparent)`, color, opacity: done ? 0.7 : 1 }}
+            >
+              <SubjectDot color={subject.color} size={6} />
+              <span className="truncate">{subject.name}</span>
+            </span>
+          )}
+          {card.is_exam && (
+            <span className="inline-flex h-[22px] items-center gap-1 rounded-full border px-2 text-[11px] font-semibold" style={{ color, borderColor: `color-mix(in oklab, ${subject?.color ?? 'var(--text-3)'} 45%, transparent)` }}>
+              <Flag size={11} aria-hidden />
+              {t('board.exam')}
+            </span>
+          )}
+        </div>
+      )}
+      <h3 className={cn('text-[15px] leading-snug font-medium break-words', done ? 'text-text-3' : 'text-text')} dir="auto">
         {card.title}
       </h3>
 
@@ -70,18 +92,6 @@ export function CardTile({
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-        {card.is_exam && (
-          <span className="inline-flex items-center gap-1 font-medium" style={{ color }}>
-            <Flag size={12} aria-hidden />
-            {t('board.exam')}
-          </span>
-        )}
-        {subject && (
-          <span className="inline-flex min-w-0 items-center gap-1.5 text-text-3">
-            <SubjectDot color={subject.color} size={6} />
-            <span className="truncate">{subject.name}</span>
-          </span>
-        )}
         {due && (
           <span className={cn('inline-flex items-center gap-1 tabular', dueTone[state])}>
             <CalendarClock size={12} aria-hidden />
