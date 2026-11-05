@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Layers, Paperclip, Pencil, Plus, Sparkles, Trash2, X } from 'lucide-react';
+import { Paperclip, Sparkles, Trash2, X } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 import { useReducedMotion } from '@/lib/prefs';
@@ -8,119 +8,20 @@ import { playUi } from '@/lib/uiSound';
 import { newId, softDelete, upsert } from '@/lib/db/repo';
 import { useSubjects } from '@/lib/db/hooks';
 import type { Flashcard } from '@/types/database';
-import { Button, Checkbox, Dialog, EmptyState, Field, IconButton, Select, Textarea, toast } from '@/components/ui';
+import { Button, Checkbox, Dialog, Field, IconButton, Select, Textarea, toast } from '@/components/ui';
 import { MathMarkdown } from '@/components/content/MathMarkdown';
-import { SubjectDot } from '@/features/subjects/SubjectChip';
-import { useFlashcards } from '../hooks';
-import { isDue, newCardState, preview, review, type Grade } from '../srs';
-import { generateFlashcards, TutorError, tutorAvailable } from '../api';
-import { FileError, prepareFile, ACCEPT } from '../files';
-import { saveFlashcards } from '../tools';
-import { errorKey } from './Conversation';
-import type { UserBlock } from '../protocol';
 
-export function FlashcardsView({ reviewNow, onReviewHandled, canGenerate }: { reviewNow?: number; onReviewHandled?: () => void; canGenerate: boolean }) {
-  const t = useT();
-  const all = useFlashcards();
-  const subjects = useSubjects();
-  const [subject, setSubject] = useState<string>('all');
-  const [reviewing, setReviewing] = useState<string[] | null>(null);
-  const [editing, setEditing] = useState<Flashcard | 'new' | null>(null);
-  const [generating, setGenerating] = useState(false);
-  const now = new Date();
-
-  const cards = useMemo(() => (all ?? []).filter((c) => subject === 'all' || (c.subject_id ?? 'none') === subject), [all, subject]);
-  const due = cards.filter((c) => isDue(c, now));
-
-  useEffect(() => {
-    if (!reviewNow || !all) return;
-    const ids = all.filter((c) => isDue(c, new Date())).map((c) => c.id);
-    setReviewing(ids);
-    onReviewHandled?.();
-  }, [reviewNow, Boolean(all)]);
-
-  if (reviewing) return <Review ids={reviewing} onClose={() => setReviewing(null)} />;
-
-  return (
-    <div className="mx-auto w-full max-w-[1040px] px-4 py-6 md:px-8">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="w-full sm:w-56">
-          <Select aria-label={t('settings.subjects')} value={subject} onChange={(e) => setSubject(e.target.value)}>
-            <option value="all">{t('fc.allSubjects')}</option>
-            {subjects?.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <p className="text-sm text-text-3">{t('fc.dueCount', { due: due.length, total: cards.length })}</p>
-        <span className="flex-1" />
-        <Button variant="ghost" iconStart={<Plus size={16} />} onClick={() => setEditing('new')}>
-          {t('fc.add')}
-        </Button>
-        {canGenerate && (
-          <Button variant="secondary" iconStart={<Sparkles size={16} />} onClick={() => setGenerating(true)}>
-            {t('fc.generate')}
-          </Button>
-        )}
-        <Button variant="primary" disabled={due.length === 0} onClick={() => setReviewing(due.map((c) => c.id))}>
-          {t('fc.review', { n: due.length })}
-        </Button>
-      </div>
-
-      {all && cards.length === 0 ? (
-        <EmptyState
-          className="mt-10"
-          icon={<Layers size={20} />}
-          title={t('fc.empty.title')}
-          body={t('fc.empty.body')}
-          action={
-            <Button variant="primary" iconStart={<Plus size={16} />} onClick={() => setEditing('new')}>
-              {t('fc.add')}
-            </Button>
-          }
-        />
-      ) : (
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {cards
-            .slice()
-            .sort((a, b) => a.due_at.localeCompare(b.due_at))
-            .map((c, i) => {
-              const s = subjects?.find((x) => x.id === c.subject_id);
-              return (
-                <motion.li
-                  key={c.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(i, 12) * 0.025, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="group lift relative flex min-h-[132px] flex-col rounded-[12px] border border-border bg-surface-1 p-4"
-                >
-                  <MathMarkdown className="line-clamp-3 font-medium">{c.front}</MathMarkdown>
-                  <MathMarkdown className="mt-2 line-clamp-2 text-sm text-text-3">{c.back}</MathMarkdown>
-                  <div className="mt-auto flex items-center gap-2 pt-3 text-xs text-text-3">
-                    {s && <SubjectDot color={s.color} size={6} />}
-                    <span className="truncate">{s?.name ?? t('tutor.general')}</span>
-                    {isDue(c, now) && <span className="ms-auto rounded-full bg-accent-soft px-2 py-0.5 text-accent-text">{t('fc.due')}</span>}
-                  </div>
-                  <div className="absolute end-2 top-2 flex opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 max-md:opacity-100">
-                    <IconButton size="sm" label={t('fc.edit')} icon={<Pencil size={14} />} onClick={() => setEditing(c)} />
-                  </div>
-                </motion.li>
-              );
-            })}
-        </ul>
-      )}
-
-      <CardEditor card={editing} defaultSubject={subject === 'all' || subject === 'none' ? null : subject} onClose={() => setEditing(null)} />
-      {canGenerate && <GenerateDialog open={generating} onOpenChange={setGenerating} defaultSubject={subject === 'all' ? null : subject} />}
-    </div>
-  );
-}
+import { useFlashcards } from '@/features/tutor/hooks';
+import { newCardState, preview, review, type Grade } from '@/features/tutor/srs';
+import { generateFlashcards, TutorError } from '@/features/tutor/api';
+import { FileError, prepareFile, ACCEPT } from '@/features/tutor/files';
+import { saveFlashcards } from '@/features/tutor/tools';
+import { errorKey } from '@/features/tutor/ui/Conversation';
+import type { UserBlock } from '@/features/tutor/protocol';
 
 // ── Review ──────────────────────────────────────────────────────────────────
 
-function fmtInterval(ms: number, t: ReturnType<typeof useT>): string {
+export function fmtInterval(ms: number, t: ReturnType<typeof useT>): string {
   const min = Math.round(ms / 60_000);
   if (min < 60) return t('fc.in.min', { n: Math.max(1, min) });
   const h = Math.round(min / 60);
@@ -128,25 +29,35 @@ function fmtInterval(ms: number, t: ReturnType<typeof useT>): string {
   return t('fc.in.d', { n: Math.round(h / 24) });
 }
 
-function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
+/**
+ * A study session. `review` schedules each card with spaced repetition; `practice` only drills
+ * (nothing is rescheduled), with an optional reversed direction (answer first).
+ */
+export function Review({ ids, onClose, mode = 'review', reverse = false }: { ids: string[]; onClose: () => void; mode?: 'review' | 'practice'; reverse?: boolean }) {
   const t = useT();
   const all = useFlashcards();
   const reduced = useReducedMotion();
   const [queue, setQueue] = useState(ids);
   const [shown, setShown] = useState(false);
   const [done, setDone] = useState(0);
-  const card = all?.find((c) => c.id === queue[0]);
+  const [knew, setKnew] = useState(0);
+  const [missed, setMissed] = useState<Set<string>>(() => new Set());
+  const raw = all?.find((c) => c.id === queue[0]);
+  const card = raw && reverse ? { ...raw, front: raw.back, back: raw.front } : raw;
   const total = ids.length;
 
   const grade = async (g: Grade) => {
-    if (!card || !shown) return;
-    const next = review(card, g);
-    await upsert('flashcards', { id: card.id, ...next });
+    if (!card || !raw || !shown) return;
+    if (mode === 'review') await upsert('flashcards', { id: raw.id, ...review(raw, g) });
     playUi(g === 'again' ? 'tap' : 'complete');
+    if (mode === 'practice') {
+      if (g === 'again') setMissed((m) => new Set(m).add(raw.id));
+      else if (!missed.has(raw.id)) setKnew((k) => k + 1);
+    }
     setShown(false);
     setQueue((q) => {
       const rest = q.slice(1);
-      return g === 'again' ? [...rest, card.id] : rest; // missed cards come back this session
+      return g === 'again' ? [...rest, raw.id] : rest; // missed cards come back this session
     });
     if (g !== 'again') setDone((d) => d + 1);
   };
@@ -158,7 +69,7 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
         e.preventDefault();
         setShown(true);
       }
-      const map: Record<string, Grade> = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' };
+      const map: Record<string, Grade> = mode === 'practice' ? { '1': 'again', '2': 'good' } : { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' };
       if (map[e.key]) void grade(map[e.key]!);
       if (e.key === 'Escape') onClose();
     };
@@ -167,13 +78,19 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
   });
 
   const finished = all && !card;
-  const grades: { g: Grade; key: string; tone: string }[] = [
-    { g: 'again', key: '1', tone: 'hover:border-danger/60' },
-    { g: 'hard', key: '2', tone: 'hover:border-warning/60' },
-    { g: 'good', key: '3', tone: 'hover:border-success/60' },
-    { g: 'easy', key: '4', tone: 'hover:border-accent/60' },
-  ];
-  const pv = card ? preview(card) : null;
+  const grades: { g: Grade; key: string; tone: string; label?: string }[] =
+    mode === 'practice'
+      ? [
+          { g: 'again', key: '1', tone: 'hover:border-danger/60', label: t('fc.practice.missed') },
+          { g: 'good', key: '2', tone: 'hover:border-success/60', label: t('fc.practice.knew') },
+        ]
+      : [
+          { g: 'again', key: '1', tone: 'hover:border-danger/60' },
+          { g: 'hard', key: '2', tone: 'hover:border-warning/60' },
+          { g: 'good', key: '3', tone: 'hover:border-success/60' },
+          { g: 'easy', key: '4', tone: 'hover:border-accent/60' },
+        ];
+  const pv = raw && mode === 'review' ? preview(raw) : null;
 
   return (
     <div className="mx-auto flex w-full max-w-[680px] flex-col px-4 py-6 md:px-8">
@@ -191,7 +108,7 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="mt-16 flex flex-col items-center text-center">
           <span className="pearl mb-5 size-16 rounded-full shadow-lift" aria-hidden />
           <h2 className="font-display text-2xl font-semibold text-text">{t('fc.done.title')}</h2>
-          <p className="mt-2 max-w-[360px] text-text-2">{t('fc.done.body')}</p>
+          <p className="mt-2 max-w-[360px] text-text-2">{mode === 'practice' ? t('fc.practice.score', { n: knew, total }) : t('fc.done.body')}</p>
           <Button variant="primary" className="mt-6" onClick={onClose}>
             {t('c.done')}
           </Button>
@@ -231,8 +148,8 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
               </motion.button>
             </AnimatePresence>
           </div>
-          <div className="mt-6 grid grid-cols-4 gap-2">
-            {grades.map(({ g, key, tone }) => (
+          <div className={cn('mt-6 grid gap-2', mode === 'practice' ? 'grid-cols-2' : 'grid-cols-4')}>
+            {grades.map(({ g, key, tone, label }) => (
               <button
                 key={g}
                 type="button"
@@ -244,8 +161,8 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
                   tone,
                 )}
               >
-                <span className="text-base font-medium text-text">{t(`fc.${g}`)}</span>
-                <span className="text-xs text-text-3 tabular">{pv ? fmtInterval(pv[g], t) : ''}</span>
+                <span className="text-base font-medium text-text">{label ?? t(`fc.${g}`)}</span>
+                <span className="text-xs text-text-3 tabular">{pv ? fmtInterval(pv[g], t) : key}</span>
               </button>
             ))}
           </div>
@@ -254,7 +171,7 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
               {t('fc.reveal')}
             </Button>
           )}
-          <p className="mt-4 text-center text-xs text-text-3 max-md:hidden">{t('fc.keys')}</p>
+          <p className="mt-4 text-center text-xs text-text-3 max-md:hidden">{mode === 'practice' ? t('fc.practice.keys') : t('fc.keys')}</p>
         </>
       ) : null}
     </div>
@@ -277,7 +194,7 @@ function Face({ children, back, hidden }: { children: React.ReactNode; back?: bo
 
 // ── Edit / add ──────────────────────────────────────────────────────────────
 
-function CardEditor({ card, defaultSubject, onClose }: { card: Flashcard | 'new' | null; defaultSubject: string | null; onClose: () => void }) {
+export function CardEditor({ card, defaultSubject, onClose }: { card: Flashcard | 'new' | null; defaultSubject: string | null; onClose: () => void }) {
   const t = useT();
   const subjects = useSubjects();
   const [front, setFront] = useState('');
@@ -352,7 +269,7 @@ function CardEditor({ card, defaultSubject, onClose }: { card: Flashcard | 'new'
 
 // ── Generate from material ──────────────────────────────────────────────────
 
-function GenerateDialog({ open, onOpenChange, defaultSubject }: { open: boolean; onOpenChange: (v: boolean) => void; defaultSubject: string | null }) {
+export function GenerateDialog({ open, onOpenChange, defaultSubject }: { open: boolean; onOpenChange: (v: boolean) => void; defaultSubject: string | null }) {
   const t = useT();
   const lang = useI18n((s) => s.lang);
   const subjects = useSubjects();
@@ -507,4 +424,3 @@ function GenerateDialog({ open, onOpenChange, defaultSubject }: { open: boolean;
   );
 }
 
-export const canUseTutor = tutorAvailable;

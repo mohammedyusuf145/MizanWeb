@@ -10,7 +10,7 @@
 import Anthropic, { toFile } from 'npm:@anthropic-ai/sdk@0.128.0';
 import { adminClient, getUser } from '../_shared/auth.ts';
 import { corsHeaders, error, json } from '../_shared/http.ts';
-import { FLASHCARD_PROMPT, FLASHCARD_SCHEMA, SYSTEM_PROMPT, TOOL_NAMES, TOOLS } from './prompt.ts';
+import { ASSISTANT_PROMPT, ASSISTANT_TOOL_NAMES, ASSISTANT_TOOLS, FLASHCARD_PROMPT, FLASHCARD_SCHEMA, SYSTEM_PROMPT, TOOL_NAMES, TOOLS } from './prompt.ts';
 import {
   type AssistantBlock,
   fileIds,
@@ -18,6 +18,7 @@ import {
   type MediaSource,
   type Msg,
   parseChat,
+  parsePersona,
   parseFlashcards,
   replayableAssistant,
   type UserBlock,
@@ -81,7 +82,8 @@ Deno.serve(async (req) => {
 // ── Chat (streaming) ────────────────────────────────────────────────────────
 
 async function chat(req: Request, userId: string, body: unknown): Promise<Response> {
-  const parsed = parseChat(body, TOOL_NAMES);
+  const persona = parsePersona(body);
+  const parsed = parseChat(body, persona === 'assistant' ? ASSISTANT_TOOL_NAMES : TOOL_NAMES);
   const messages = parsed.messages;
   const last = messages[messages.length - 1] as Extract<Msg, { role: 'user' }>;
   const admin = adminClient();
@@ -131,11 +133,11 @@ async function chat(req: Request, userId: string, body: unknown): Promise<Respon
           {
             model: MODEL,
             max_tokens: MAX_OUTPUT,
-            system: [{ type: 'text', text: SYSTEM_PROMPT }],
+            system: [{ type: 'text', text: persona === 'assistant' ? ASSISTANT_PROMPT : SYSTEM_PROMPT }],
             cache_control: { type: 'ephemeral' },
             thinking: { type: 'adaptive', display: 'omitted' },
             output_config: { effort: EFFORT },
-            tools: TOOLS.map((t) => ({ ...t, strict: true, eager_input_streaming: true })) as unknown as Anthropic.Beta.BetaToolUnion[],
+            tools: (persona === 'assistant' ? ASSISTANT_TOOLS : TOOLS).map((t) => ({ ...t, strict: true, eager_input_streaming: true })) as unknown as Anthropic.Beta.BetaToolUnion[],
             tool_choice: { type: 'auto' },
             messages: messages as unknown as Anthropic.Beta.BetaMessageParam[],
             ...(FALLBACK ? { betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' as const } : {}),

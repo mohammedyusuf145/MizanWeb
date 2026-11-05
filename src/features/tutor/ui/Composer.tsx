@@ -23,6 +23,7 @@ export function Composer({
   onStop,
   draft,
   onDraftConsumed,
+  showStyle = true,
 }: {
   busy: boolean;
   disabled?: boolean;
@@ -33,6 +34,8 @@ export function Composer({
   /** Text to place in the box (a suggestion or a restored message after an error). */
   draft?: { text: string; n: number } | null;
   onDraftConsumed?: () => void;
+  /** The explanation style applies to the tutor only. */
+  showStyle?: boolean;
 }) {
   const t = useT();
   const [text, setText] = useState('');
@@ -174,7 +177,7 @@ export function Composer({
               e.target.value = '';
             }}
           />
-          <div className="w-[140px]">
+          <div className={showStyle ? 'w-[140px]' : 'hidden'}>
             <Select aria-label={t('tutor.style')} value={style} onChange={(e) => onStyle(e.target.value as Style)} className="!h-8 !rounded-full !text-sm">
               {STYLES.map((s) => (
                 <option key={s} value={s}>

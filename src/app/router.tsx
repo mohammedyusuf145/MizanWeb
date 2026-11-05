@@ -36,6 +36,7 @@ export const router = createBrowserRouter([
           { path: '/board/:boardId?', lazy: async () => ({ Component: (await import('@/routes/BoardPage')).BoardPage }) },
           { path: '/calendar', lazy: async () => ({ Component: (await import('@/routes/CalendarPage')).CalendarPage }) },
           { path: '/focus', lazy: async () => ({ Component: (await import('@/routes/FocusPage')).FocusPage }) },
+          { path: '/cards', lazy: async () => ({ Component: (await import('@/routes/CardsPage')).CardsPage }) },
           { path: '/books/:bookId?', lazy: async () => ({ Component: (await import('@/routes/BooksPage')).BooksPage }) },
           { path: '/tutor/:threadId?', lazy: async () => ({ Component: (await import('@/routes/TutorPage')).TutorPage }) },
           { path: '/stats', lazy: async () => ({ Component: (await import('@/routes/StatsPage')).StatsPage }) },

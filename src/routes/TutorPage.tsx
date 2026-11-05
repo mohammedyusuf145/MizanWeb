@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { motion } from 'motion/react';
-import { BookOpenCheck, CalendarRange, GraduationCap, Layers, Lightbulb, LogIn, MessagesSquare, PanelRight } from 'lucide-react';
+import { BookOpenCheck, CalendarRange, GraduationCap, Layers, Lightbulb, LogIn, MessagesSquare, Palette, PanelRight, PenLine, Sparkles } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import type { MessageKey } from '@/locales/en';
 import { useAuth, signOut } from '@/lib/auth';
 import { upsert } from '@/lib/db/repo';
 import { useSubjects } from '@/lib/db/hooks';
-import { Button, EmptyState, IconButton, Segmented, Select, Sheet, Skeleton } from '@/components/ui';
+import { Button, EmptyState, IconButton, Select, Sheet, Skeleton } from '@/components/ui';
 import { PageHeader } from '@/app/shell/PageHeader';
 import { useThread, useThreads, useMessages } from '@/features/tutor/hooks';
 import { createThread, sendStudent, stop, useTutor } from '@/features/tutor/engine';
@@ -16,7 +16,6 @@ import { tutorAvailable } from '@/features/tutor/api';
 import { Conversation } from '@/features/tutor/ui/Conversation';
 import { Composer, type Attached } from '@/features/tutor/ui/Composer';
 import { ContextPanel, ThreadList } from '@/features/tutor/ui/Side';
-import { FlashcardsView } from '@/features/tutor/ui/Flashcards';
 
 const STYLE_KEY = 'mizan.tutorStyle';
 const readStyle = (): Style => {
@@ -34,7 +33,6 @@ export function TutorPage() {
   const navigate = useNavigate();
   const { threadId } = useParams();
   const [params, setParams] = useSearchParams();
-  const tab = params.get('tab') === 'cards' ? 'cards' : 'chat';
   const mode = useAuth((s) => s.mode);
   const online = mode === 'cloud' && tutorAvailable();
 
@@ -50,7 +48,7 @@ export function TutorPage() {
   const [draft, setDraft] = useState<{ text: string; n: number } | null>(null);
   const [threadsOpen, setThreadsOpen] = useState(false);
   const [contextOpen, setContextOpen] = useState(false);
-  const [reviewNow, setReviewNow] = useState(0);
+  const [newPersona, setNewPersona] = useState<'tutor' | 'assistant'>(() => (params.get('persona') === 'assistant' ? 'assistant' : 'tutor'));
 
   const setStyle = (s: Style) => {
     setStyleState(s);
@@ -60,21 +58,19 @@ export function TutorPage() {
       /* ignore */
     }
   };
-  const setTab = (v: 'chat' | 'cards') => setParams((p) => (v === 'cards' ? p.set('tab', 'cards') : p.delete('tab'), p), { replace: true });
 
   // A deleted or unknown thread falls back to a fresh chat.
   useEffect(() => {
     if (threadId && thread === null) navigate('/tutor', { replace: true });
   }, [thread, threadId]);
 
-  // Links from elsewhere (e.g. Today's "plan revision") arrive as ?ask=… or ?tab=cards&review=1.
+  // Links from elsewhere (e.g. Today's "plan revision") arrive as ?ask=…; old ?tab=cards links go to Flashcards.
   useEffect(() => {
+    if (params.get('tab') === 'cards') return void navigate(params.get('review') ? '/cards?review=1' : '/cards', { replace: true });
     const ask = params.get('ask');
-    const review = params.get('review');
-    if (!ask && !review) return;
-    if (ask) setDraft({ text: ask.slice(0, 2000), n: Date.now() });
-    if (review) setReviewNow(Date.now());
-    setParams((p) => (p.delete('ask'), p.delete('review'), p), { replace: true });
+    if (!ask) return;
+    setDraft({ text: ask.slice(0, 2000), n: Date.now() });
+    setParams((p) => (p.delete('ask'), p.delete('persona'), p), { replace: true });
   }, [params]);
 
   // Put back what the student typed if the message never reached the tutor.
@@ -87,18 +83,27 @@ export function TutorPage() {
   async function send(text: string, files: Attached[]) {
     let id = threadId;
     if (!id) {
-      id = await createThread(newSubject || null);
+      id = await createThread(newSubject || null, newPersona);
       navigate(`/tutor/${id}`);
     }
     await sendStudent({ threadId: id, text, attachments: files, style, lang });
   }
 
-  const suggestions: { icon: React.ReactNode; label: MessageKey; prompt: MessageKey; style?: Style }[] = [
-    { icon: <Lightbulb size={16} />, label: 'tutor.suggest.explain', prompt: 'tutor.prompt.explain', style: 'steps' },
-    { icon: <BookOpenCheck size={16} />, label: 'tutor.suggest.quiz', prompt: 'tutor.prompt.quiz' },
-    { icon: <CalendarRange size={16} />, label: 'tutor.suggest.plan', prompt: 'tutor.prompt.plan', style: 'exam' },
-    { icon: <Layers size={16} />, label: 'tutor.suggest.cards', prompt: 'tutor.prompt.cards' },
-  ];
+  const persona = thread ? (thread.persona ?? 'tutor') : newPersona;
+  const suggestions: { icon: React.ReactNode; label: MessageKey; prompt: MessageKey; style?: Style }[] =
+    persona === 'assistant'
+      ? [
+          { icon: <Lightbulb size={16} />, label: 'tutor.suggest.explainAny', prompt: 'tutor.prompt.explainAny' },
+          { icon: <Palette size={16} />, label: 'tutor.suggest.design', prompt: 'tutor.prompt.design' },
+          { icon: <PenLine size={16} />, label: 'tutor.suggest.write', prompt: 'tutor.prompt.write' },
+          { icon: <CalendarRange size={16} />, label: 'tutor.suggest.week', prompt: 'tutor.prompt.week' },
+        ]
+      : [
+          { icon: <Lightbulb size={16} />, label: 'tutor.suggest.explain', prompt: 'tutor.prompt.explain', style: 'steps' },
+          { icon: <BookOpenCheck size={16} />, label: 'tutor.suggest.quiz', prompt: 'tutor.prompt.quiz' },
+          { icon: <CalendarRange size={16} />, label: 'tutor.suggest.plan', prompt: 'tutor.prompt.plan', style: 'exam' },
+          { icon: <Layers size={16} />, label: 'tutor.suggest.cards', prompt: 'tutor.prompt.cards' },
+        ];
 
   const subjectSelect = (
     <div className="w-[170px]">
@@ -125,23 +130,9 @@ export function TutorPage() {
     <>
       <PageHeader
         title={t('nav.tutor')}
-        actions={
-          <Segmented
-            label={t('nav.tutor')}
-            value={tab}
-            onValueChange={setTab}
-            className="max-sm:[&_button]:px-2.5"
-            options={[
-              { value: 'chat', label: <span className="max-sm:sr-only">{t('chat.tab')}</span>, icon: <MessagesSquare size={15} /> },
-              { value: 'cards', label: <span className="max-sm:sr-only">{t('fc.tab')}</span>, icon: <Layers size={15} /> },
-            ]}
-          />
-        }
       />
 
-      {tab === 'cards' ? (
-        <FlashcardsView canGenerate={online} reviewNow={reviewNow} onReviewHandled={() => setReviewNow(0)} />
-      ) : !online ? (
+      {!online ? (
         <div className="px-4 py-10 md:px-8">
           <EmptyState
             icon={<GraduationCap size={20} />}
@@ -154,7 +145,7 @@ export function TutorPage() {
                     {t('tutor.signin.action')}
                   </Button>
                 )}
-                <Button variant="secondary" iconStart={<Layers size={16} />} onClick={() => setTab('cards')}>
+                <Button variant="secondary" iconStart={<Layers size={16} />} onClick={() => navigate('/cards')}>
                   {t('fc.tab')}
                 </Button>
               </>
@@ -173,7 +164,7 @@ export function TutorPage() {
               <p className="min-w-0 flex-1 truncate text-base text-text-2" dir="auto">
                 {thread?.title || t('tutor.newChat')}
               </p>
-              {subjectSelect}
+              {persona === 'tutor' && subjectSelect}
               <IconButton className="xl:hidden" label={t('tutor.panel')} icon={<PanelRight size={18} className="flip-rtl" />} onClick={() => setContextOpen(true)} />
             </div>
 
@@ -189,9 +180,31 @@ export function TutorPage() {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="mx-auto flex max-w-[640px] flex-col items-start px-5 pt-[8vh] pb-8"
                 >
-                  <span aria-hidden className="pearl mb-6 size-14 rounded-full shadow-lift" />
-                  <h2 className="font-display text-3xl font-semibold text-text text-balance">{t('tutor.empty.title')}</h2>
-                  <p className="mt-3 max-w-[520px] text-md text-text-2">{t('tutor.empty.body')}</p>
+                  {!threadId && (
+                    <div className="mb-8 w-full">
+                      <p className="mb-2 text-sm text-text-3">{t('tutor.persona')}</p>
+                      <div role="radiogroup" aria-label={t('tutor.persona')} className="grid gap-2 sm:grid-cols-2">
+                        {(['tutor', 'assistant'] as const).map((p) => (
+                          <button
+                            key={p}
+                            type="button"
+                            role="radio"
+                            aria-checked={newPersona === p}
+                            onClick={() => setNewPersona(p)}
+                            className={`press flex flex-col items-start gap-1 rounded-[12px] border px-4 py-3 text-start transition-colors ${newPersona === p ? 'border-accent bg-accent-soft' : 'border-border bg-surface-1 hover:border-border-strong'}`}
+                          >
+                            <span className="flex items-center gap-2 text-base font-medium text-text">
+                              {p === 'tutor' ? <GraduationCap size={16} /> : <Sparkles size={16} />}
+                              {t(`tutor.persona.${p}`)}
+                            </span>
+                            <span className="text-sm text-text-2">{t(`tutor.persona.${p}.hint`)}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <h2 className="font-display text-3xl font-semibold text-text text-balance">{persona === 'assistant' ? t('tutor.assistant.title') : t('tutor.empty.title')}</h2>
+                  <p className="mt-3 max-w-[520px] text-md text-text-2">{persona === 'assistant' ? t('tutor.assistant.body') : t('tutor.empty.body')}</p>
                   <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
                     {suggestions.map((s, i) => (
                       <motion.button
@@ -216,6 +229,7 @@ export function TutorPage() {
             )}
 
             <Composer
+              showStyle={persona === 'tutor'}
               busy={Boolean(run)}
               style={style}
               onStyle={setStyle}
@@ -227,7 +241,7 @@ export function TutorPage() {
           </section>
 
           <aside className="hidden w-[300px] shrink-0 overflow-y-auto border-s border-border bg-surface-1/40 xl:block">
-            <ContextPanel subjectId={subjectId} onReview={() => (setTab('cards'), setReviewNow(Date.now()))} />
+            <ContextPanel persona={persona} subjectId={subjectId} onReview={() => navigate('/cards?review=1')} />
           </aside>
         </div>
       )}
@@ -247,11 +261,11 @@ export function TutorPage() {
       </Sheet>
       <Sheet open={contextOpen} onOpenChange={setContextOpen} title={t('tutor.panel')} side="end" width={340}>
         <ContextPanel
+          persona={persona}
           subjectId={subjectId}
           onReview={() => {
             setContextOpen(false);
-            setTab('cards');
-            setReviewNow(Date.now());
+            navigate('/cards?review=1');
           }}
         />
       </Sheet>

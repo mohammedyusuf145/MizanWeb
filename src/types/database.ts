@@ -122,6 +122,8 @@ export interface TimerStateRow extends BaseRow {
 
 export interface ChatThread extends BaseRow {
   subject_id: UUID | null;
+  /** Fixed when the chat starts: the study tutor or the general assistant. */
+  persona: 'tutor' | 'assistant';
   title: string;
   last_message_at: ISODate | null;
 }

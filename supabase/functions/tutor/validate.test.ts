@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from 'jsr:@std/assert@1.0.13';
-import { TOOL_NAMES } from './prompt.ts';
+import { ASSISTANT_TOOL_NAMES, TOOL_NAMES } from './prompt.ts';
 import { isStudentTurn, LIMITS, parseChat, parseFlashcards, replayableAssistant, ValidationError, weightedTokens } from './validate.ts';
 
 const code = (fn: () => unknown) => {
@@ -121,4 +121,16 @@ Deno.test('fallback replay drops pre-boundary thinking and tool calls', () => {
 Deno.test('weighted tokens discount cache reads', () => {
   assertEquals(weightedTokens({ input_tokens: 100, output_tokens: 50, cache_creation_input_tokens: 1000, cache_read_input_tokens: 5000 }), 1650);
   assertEquals(weightedTokens({}), 0);
+});
+
+Deno.test('persona: defaults to tutor, accepts assistant, rejects anything else', () => {
+  assertEquals(parseChat({ mode: 'chat', messages: [user('hi')] }, TOOL_NAMES).persona, 'tutor');
+  assertEquals(parseChat({ mode: 'chat', persona: 'assistant', messages: [user('hi')] }, TOOL_NAMES).persona, 'assistant');
+  assertEquals(code(() => parseChat({ mode: 'chat', persona: 'admin', messages: [user('hi')] }, TOOL_NAMES)), 'bad_persona');
+});
+
+Deno.test('assistant cannot call tutor-only tools', () => {
+  const call = asst([{ type: 'tool_use', id: 't1', name: 'make_quiz', input: {} }]);
+  const res = { role: 'user', content: [{ type: 'tool_result', tool_use_id: 't1', content: 'x' }] };
+  assertEquals(code(() => parseChat({ mode: 'chat', persona: 'assistant', messages: [user('a'), call, res] }, ASSISTANT_TOOL_NAMES)), 'unknown_tool');
 });

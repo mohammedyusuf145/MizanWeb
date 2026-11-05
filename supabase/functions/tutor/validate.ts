@@ -44,9 +44,18 @@ export type AssistantBlock =
 
 export type Msg = { role: 'user'; content: UserBlock[] } | { role: 'assistant'; content: AssistantBlock[] };
 
+export type Persona = 'tutor' | 'assistant';
+
 export interface ChatRequest {
   mode: 'chat';
+  persona: Persona;
   messages: Msg[];
+}
+
+/** Which assistant this conversation is with; anything else is rejected. */
+export function parsePersona(body: unknown): Persona {
+  const p = isObj(body) ? (body.persona ?? 'tutor') : 'tutor';
+  return p === 'tutor' || p === 'assistant' ? p : fail('bad_persona');
 }
 
 export interface FlashcardsRequest {
@@ -215,7 +224,7 @@ export function parseChat(body: unknown, toolNames: ReadonlySet<string>): ChatRe
   for (let i = messages.length - 1; i >= 0 && !isStudentTurn(messages[i]!); i -= 2) hops++;
   if (hops > LIMITS.maxToolHops) fail('too_many_tool_calls');
 
-  return { mode: 'chat', messages };
+  return { mode: 'chat', persona: parsePersona(body), messages };
 }
 
 export function parseFlashcards(body: unknown): FlashcardsRequest {

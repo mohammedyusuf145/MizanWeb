@@ -52,8 +52,8 @@ const toolUses = (m: ChatMessage | undefined): ToolUse[] =>
 
 const MOVED_ON = 'The student moved on without using this. Continue from their new message.';
 
-export async function createThread(subjectId: string | null): Promise<string> {
-  const row = await upsert('chat_threads', { subject_id: subjectId, title: '', last_message_at: null });
+export async function createThread(subjectId: string | null, persona: 'tutor' | 'assistant' = 'tutor'): Promise<string> {
+  const row = await upsert('chat_threads', { subject_id: subjectId, title: '', last_message_at: null, persona });
   return row.id;
 }
 
@@ -155,6 +155,7 @@ async function run(threadId: string, messages: ApiMessage[], userRow: { id: stri
   const abort = new AbortController();
   clearError(threadId);
   useTutor.setState((s) => ({ runs: { ...s.runs, [threadId]: { pending, partial: {}, activity: { kind: 'thinking' }, abort } } }));
+  const persona = (await getDb().chat_threads.get(threadId))?.persona ?? 'tutor';
   let userSaved = false;
   let userSave: Promise<void> = Promise.resolve();
   let assistant: ChatMessage | null = null;
@@ -191,6 +192,7 @@ async function run(threadId: string, messages: ApiMessage[], userRow: { id: stri
         }
       },
       abort.signal,
+      persona,
     );
   } catch (e) {
     const code = e instanceof TutorError ? e.code : 'network';

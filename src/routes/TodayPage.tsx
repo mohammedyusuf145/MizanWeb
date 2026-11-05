@@ -143,7 +143,7 @@ export function TodayPage() {
               <Panel title={t('today.cards')} icon={<Layers size={15} />}>
                 {due ? <p className="font-display text-2xl text-text tabular">{t('today.cards.due', { n: due })}</p> : <p className="text-base text-text-3">{t('today.cards.none')}</p>}
                 {due > 0 && (
-                  <Link to="/tutor?tab=cards&review=1" className="mt-1 inline-block text-sm font-medium text-accent-text hover:underline">
+                  <Link to="/cards?review=1" className="mt-1 inline-block text-sm font-medium text-accent-text hover:underline">
                     {t('today.cards.review')}
                   </Link>
                 )}

@@ -39,12 +39,12 @@ async function failure(res: Response): Promise<TutorError> {
 export type ApiMessage = { role: 'user'; content: UserBlock[] } | { role: 'assistant'; content: AssistantBlock[] };
 
 /** Streams one assistant turn. Resolves when the stream ends; events arrive through `onEvent`. */
-export async function streamChat(messages: ApiMessage[], onEvent: (e: StreamEvent) => void, signal?: AbortSignal): Promise<void> {
+export async function streamChat(messages: ApiMessage[], onEvent: (e: StreamEvent) => void, signal?: AbortSignal, persona: 'tutor' | 'assistant' = 'tutor'): Promise<void> {
   if (typeof navigator !== 'undefined' && !navigator.onLine) throw new TutorError('offline');
   if (!BASE) throw new TutorError('tutor_not_configured');
   let res: Response;
   try {
-    res = await fetch(BASE, { method: 'POST', headers: await headers(), body: JSON.stringify({ mode: 'chat', messages }), signal });
+    res = await fetch(BASE, { method: 'POST', headers: await headers(), body: JSON.stringify({ mode: 'chat', persona, messages }), signal });
   } catch (e) {
     if (signal?.aborted) throw new TutorError('aborted');
     throw e instanceof TutorError ? e : new TutorError('network');

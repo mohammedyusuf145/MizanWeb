@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { CalendarClock, Flag, MessageSquarePlus, MoreHorizontal, Trash2 } from 'lucide-react';
+import { CalendarClock, Flag, MessageSquarePlus, MoreHorizontal, Sparkles, Trash2 } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { relativeDay, formatTime } from '@/lib/dates';
 import { cn } from '@/lib/cn';
@@ -43,8 +43,8 @@ export function ThreadList({ threads, activeId, onNew, onPick }: { threads: Chat
                   {th.title || t('tutor.untitled')}
                 </span>
                 <span className="relative flex items-center gap-1.5 text-xs text-text-3">
-                  {subject && <SubjectDot color={subject.color} size={6} />}
-                  <span className="truncate">{subject?.name ?? t('tutor.general')}</span>
+                  {th.persona === 'assistant' ? <Sparkles size={11} aria-hidden /> : subject && <SubjectDot color={subject.color} size={6} />}
+                  <span className="truncate">{th.persona === 'assistant' ? t('tutor.persona.assistant') : (subject?.name ?? t('tutor.general'))}</span>
                   {th.last_message_at && <span className="ms-auto shrink-0">{relativeDay(new Date(th.last_message_at), lang)}</span>}
                 </span>
               </Link>
@@ -77,7 +77,7 @@ export function ThreadList({ threads, activeId, onNew, onPick }: { threads: Chat
 }
 
 /** What the tutor knows about right now: the subject's upcoming work, weak topics and cards due. */
-export function ContextPanel({ subjectId, onReview }: { subjectId: string | null; onReview: () => void }) {
+export function ContextPanel({ subjectId, onReview, persona = 'tutor' }: { subjectId: string | null; onReview: () => void; persona?: 'tutor' | 'assistant' }) {
   const t = useT();
   const lang = useI18n((s) => s.lang);
   const subjects = useSubjects();
@@ -101,7 +101,7 @@ export function ContextPanel({ subjectId, onReview }: { subjectId: string | null
 
   return (
     <div className="flex flex-col gap-6 p-5">
-      <div>
+      <div className={persona === 'assistant' ? 'hidden' : undefined}>
         <p className="text-xs text-text-3">{t('tutor.panel.subject')}</p>
         <p className="mt-1 flex items-center gap-2 font-display text-lg font-semibold text-text">
           {subject && <span className="size-2.5 rounded-full" style={{ background: subjectColor(subject.color) }} />}
@@ -134,7 +134,7 @@ export function ContextPanel({ subjectId, onReview }: { subjectId: string | null
         )}
       </section>
 
-      <section>
+      <section className={persona === 'assistant' ? 'hidden' : undefined}>
         <h3 className="mb-2 text-sm font-medium text-text-2">{t('tutor.panel.weak')}</h3>
         {weak.length === 0 ? (
           <p className="text-sm text-text-3">{t('tutor.panel.weakNone')}</p>
@@ -166,7 +166,7 @@ export function ContextPanel({ subjectId, onReview }: { subjectId: string | null
 
       <section className="rounded-[12px] border border-border bg-surface-2 p-4">
         <h3 className="text-sm font-medium text-text-2">{t('tutor.panel.cards')}</h3>
-        <p className="mt-1 font-display text-2xl font-semibold text-text tabular">{t('tutor.panel.due', { n: due })}</p>
+        <p className={due ? 'mt-1 font-display text-2xl font-semibold text-text tabular' : 'mt-1 text-base text-text-3'}>{due ? t('tutor.panel.due', { n: due }) : t('today.cards.none')}</p>
         <Button size="sm" variant={due ? 'primary' : 'secondary'} className="mt-3" onClick={onReview}>
           {t('tutor.panel.review')}
         </Button>
