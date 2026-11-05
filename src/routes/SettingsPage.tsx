@@ -361,8 +361,12 @@ function ThemeTiles({ value, onChange }: { value: 'dark' | 'light' | 'system'; o
 const ACCENTS: { v: Accent; dark: string; light: string }[] = [
   { v: 'gold', dark: '#d4af6a', light: '#8a6416' },
   { v: 'pearl', dark: '#7fb8c9', light: '#0f6274' },
-  { v: 'coral', dark: '#e59a84', light: '#a3432a' },
+  { v: 'sky', dark: '#7db7f0', light: '#1f5fa8' },
   { v: 'iris', dark: '#a9b4f0', light: '#3f4bb5' },
+  { v: 'rose', dark: '#e58fb0', light: '#a3315f' },
+  { v: 'coral', dark: '#e59a84', light: '#a3432a' },
+  { v: 'emerald', dark: '#6fcb9f', light: '#17694a' },
+  { v: 'slate', dark: '#aeb8c8', light: '#3d4a60' },
 ];
 
 function AccentPicker() {
@@ -370,7 +374,7 @@ function AccentPicker() {
   const accent = usePrefs((s) => s.accent);
   const theme = typeof document !== 'undefined' ? document.documentElement.dataset.theme : 'dark';
   return (
-    <div role="radiogroup" aria-label={t('settings.accent')} className="flex gap-2">
+    <div role="radiogroup" aria-label={t('settings.accent')} className="grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap">
       {ACCENTS.map((a) => {
         const on = accent === a.v;
         const label = t(`settings.accent.${a.v}`);

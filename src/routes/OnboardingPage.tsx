@@ -67,7 +67,7 @@ export function OnboardingPage() {
         exam: withExam && date && exam.title.trim() ? { subjectIndex: Math.max(0, examIndex), title: exam.title.trim(), date } : null,
         includeSamples: samples,
       });
-      navigate('/board', { replace: true });
+      navigate('/today', { replace: true });
     } catch {
       toast(t('auth.err.generic'), { tone: 'danger' });
       setBusy(false);

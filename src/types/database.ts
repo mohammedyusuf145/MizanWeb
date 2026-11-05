@@ -165,6 +165,9 @@ export interface Book extends BaseRow {
   title: string;
   author: string;
   cover_url: string | null;
+  /** 'image' shows cover_url; 'text' shows a typeset cover in cover_color (cover_url is kept for switching back). */
+  cover_mode: 'image' | 'text';
+  cover_color: string | null;
   isbn: string | null;
   status: BookStatus;
   rating: number | null;

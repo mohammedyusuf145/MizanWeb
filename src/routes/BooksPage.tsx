@@ -101,7 +101,7 @@ export function BooksPage() {
                       <li key={b.id}>
                         <button type="button" onClick={() => openBook(b)} className="lift press flex w-full gap-4 rounded-[12px] border border-border bg-surface-1 p-3 text-start">
                           <span className="w-14 shrink-0">
-                            <BookCover title={b.title} author={b.author} url={b.cover_url} size="sm" />
+                            <BookCover title={b.title} author={b.author} url={b.cover_url} mode={b.cover_mode} color={b.cover_color} size="sm" />
                           </span>
                           <span className="flex min-w-0 flex-1 flex-col justify-center gap-1">
                             <span className="truncate font-reading text-[15px] font-semibold text-text" dir="auto">
@@ -170,7 +170,7 @@ export function BooksPage() {
                     <motion.li key={b.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: Math.min(i, 14) * 0.02, duration: 0.25 }}>
                       <button type="button" onClick={() => openBook(b)} className="group flex w-full flex-col gap-2 text-start">
                         <span className="relative block transition-transform duration-[var(--dur-base)] ease-standard group-hover:-translate-y-1">
-                          <BookCover title={b.title} author={b.author} url={b.cover_url} />
+                          <BookCover title={b.title} author={b.author} url={b.cover_url} mode={b.cover_mode} color={b.cover_color} />
                           {b.favorite && (
                             <span className="absolute end-1.5 top-1.5 inline-flex size-6 items-center justify-center rounded-full bg-black/45">
                               <Heart size={12} className="fill-white text-white" aria-label={t('books.favorite')} />

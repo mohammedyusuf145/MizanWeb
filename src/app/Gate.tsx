@@ -38,7 +38,7 @@ export function RedirectIfSignedIn({ children }: { children: ReactNode }) {
   const status = useAuth((s) => s.status);
   const location = useLocation();
   if (status === 'loading') return <Splash label={t('app.loading')} />;
-  if (status === 'ready') return <Navigate to={(location.state as { from?: string } | null)?.from ?? '/board'} replace />;
+  if (status === 'ready') return <Navigate to={(location.state as { from?: string } | null)?.from ?? '/today'} replace />;
   return <>{children}</>;
 }
 
@@ -51,6 +51,6 @@ export function RequireUnonboarded({ children }: { children: ReactNode }) {
   if (status === 'loading') return <Splash label={t('app.loading')} />;
   if (status === 'signedOut') return <Navigate to="/welcome" replace />;
   if (profile === undefined || (!profile?.onboarded_at && !pulled)) return <Splash label={t('app.loading')} />;
-  if (profile?.onboarded_at) return <Navigate to="/board" replace />;
+  if (profile?.onboarded_at) return <Navigate to="/today" replace />;
   return <>{children}</>;
 }

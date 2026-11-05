@@ -101,12 +101,18 @@ export function fromOpenLibrary(doc: Record<string, unknown>): FoundBook | null 
   };
 }
 
-/** Typographic cover colour for books without an image: stable per title, from a muted, AA-safe set. */
-const COVER_TONES = ['#2c3e5c', '#4a3b2a', '#2f4a43', '#5a2f35', '#3c3a5a', '#4b4a2c', '#2b4656', '#553a4d'];
-export function coverTone(title: string): string {
+/**
+ * Cloth colours for typeset covers. Dark tones carry white type, the paper tone carries ink;
+ * every pair is above 7:1 so titles stay legible at thumbnail size.
+ */
+export const COVER_TONES = ['#1f2a44', '#5a2430', '#24433a', '#3e2c55', '#6b4a1c', '#1e4a52', '#3a4150', '#ece4d4'] as const;
+export const PAPER_TONE = '#ece4d4';
+
+export function coverTone(title: string, chosen?: string | null): string {
+  if (chosen && /^#[0-9a-f]{6}$/.test(chosen)) return chosen;
   let h = 0;
   for (const ch of title) h = (h * 31 + ch.codePointAt(0)!) >>> 0;
-  return COVER_TONES[h % COVER_TONES.length]!;
+  return COVER_TONES[h % (COVER_TONES.length - 1)]!; // the paper tone is only used when picked
 }
 
 export const isArabic = (s: string) => /[؀-ۿ]/.test(s);

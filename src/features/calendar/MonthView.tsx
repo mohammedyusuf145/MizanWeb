@@ -114,7 +114,7 @@ export function MonthView({ anchor, weekStart, events, now, prefs, onOpen, onCre
                   >
                     {dayNumber(d)}
                   </button>
-                  {wide && secondary(d) && <span className="truncate text-[10px] text-text-3">{secondary(d)}</span>}
+                  {wide && secondary(d) && <span className="truncate text-xs text-text-3">{secondary(d)}</span>}
                 </div>
                 {wide ? (
                   <div className="flex min-h-0 flex-col gap-0.5 p-1">
@@ -128,7 +128,7 @@ export function MonthView({ anchor, weekStart, events, now, prefs, onOpen, onCre
                           e.stopPropagation();
                           onDayClick(d);
                         }}
-                        className="h-5 rounded-chip px-1.5 text-start text-[11px] text-text-3 hover:bg-surface-3 hover:text-text-2"
+                        className="h-5 rounded-chip px-1.5 text-start text-xs text-text-3 hover:bg-surface-3 hover:text-text-2"
                       >
                         {t('cal.more', { n: list.length - MAX_CHIPS })}
                       </button>

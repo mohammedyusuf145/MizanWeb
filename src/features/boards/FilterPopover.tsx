@@ -39,7 +39,7 @@ export function FilterPopover() {
       <PopoverTrigger asChild>
         <Button size="sm" variant={count ? 'secondary' : 'ghost'} iconStart={<ListFilter size={15} />} aria-label={t('board.filter')}>
           <span className="max-md:sr-only">{t('board.filter')}</span>
-          {count > 0 && <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-accent-ink tabular">{count}</span>}
+          {count > 0 && <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-xs font-semibold text-accent-ink tabular">{count}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[min(360px,calc(100vw-32px))] !p-4">

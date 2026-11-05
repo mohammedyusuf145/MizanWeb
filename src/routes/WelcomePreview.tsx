@@ -80,12 +80,12 @@ function PreviewCard({ color, subject, title, meta, exam }: { color: string; sub
   return (
     <div className="rounded-card border border-border bg-surface-2 px-3.5 py-3 shadow-card">
       <div className="mb-1.5 flex items-center gap-1.5">
-        <span className="inline-flex h-[22px] items-center gap-1.5 rounded-full px-2 text-[11px] font-medium" style={{ background: `color-mix(in oklab, ${color} 16%, transparent)`, color: c }}>
+        <span className="inline-flex h-[22px] items-center gap-1.5 rounded-full px-2 text-xs font-medium" style={{ background: `color-mix(in oklab, ${color} 16%, transparent)`, color: c }}>
           <span className="size-1.5 rounded-full" style={{ background: c }} />
           {subject}
         </span>
         {exam && (
-          <span className="inline-flex h-[22px] items-center gap-1 rounded-full border px-2 text-[11px] font-semibold" style={{ color: c, borderColor: `color-mix(in oklab, ${color} 45%, transparent)` }}>
+          <span className="inline-flex h-[22px] items-center gap-1 rounded-full border px-2 text-xs font-semibold" style={{ color: c, borderColor: `color-mix(in oklab, ${color} 45%, transparent)` }}>
             <Flag size={11} />
           </span>
         )}

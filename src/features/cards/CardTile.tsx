@@ -61,7 +61,7 @@ export function CardTile({
         <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
           {subject && (
             <span
-              className="inline-flex h-[22px] max-w-full min-w-0 items-center gap-1.5 rounded-full px-2 text-[11px] font-medium"
+              className="inline-flex h-[22px] max-w-full min-w-0 items-center gap-1.5 rounded-full px-2 text-xs font-medium"
               style={{ background: `color-mix(in oklab, ${subject.color} 16%, transparent)`, color, opacity: done ? 0.7 : 1 }}
             >
               <SubjectDot color={subject.color} size={6} />
@@ -69,7 +69,7 @@ export function CardTile({
             </span>
           )}
           {card.is_exam && (
-            <span className="inline-flex h-[22px] items-center gap-1 rounded-full border px-2 text-[11px] font-semibold" style={{ color, borderColor: `color-mix(in oklab, ${subject?.color ?? 'var(--text-3)'} 45%, transparent)` }}>
+            <span className="inline-flex h-[22px] items-center gap-1 rounded-full border px-2 text-xs font-semibold" style={{ color, borderColor: `color-mix(in oklab, ${subject?.color ?? 'var(--text-3)'} 45%, transparent)` }}>
               <Flag size={11} aria-hidden />
               {t('board.exam')}
             </span>
@@ -83,11 +83,11 @@ export function CardTile({
       {card.labels.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {card.labels.slice(0, 3).map((l) => (
-            <span key={l} className="inline-flex h-5 items-center rounded-chip bg-surface-3 px-1.5 text-[11px] text-text-2" dir="auto">
+            <span key={l} className="inline-flex h-5 items-center rounded-chip bg-surface-3 px-1.5 text-xs text-text-2" dir="auto">
               {l}
             </span>
           ))}
-          {card.labels.length > 3 && <span className="inline-flex h-5 items-center px-1 text-[11px] text-text-3">+{card.labels.length - 3}</span>}
+          {card.labels.length > 3 && <span className="inline-flex h-5 items-center px-1 text-xs text-text-3">+{card.labels.length - 3}</span>}
         </div>
       )}
 

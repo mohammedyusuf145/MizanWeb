@@ -67,6 +67,16 @@ export function TutorPage() {
     if (threadId && thread === null) navigate('/tutor', { replace: true });
   }, [thread, threadId]);
 
+  // Links from elsewhere (e.g. Today's "plan revision") arrive as ?ask=… or ?tab=cards&review=1.
+  useEffect(() => {
+    const ask = params.get('ask');
+    const review = params.get('review');
+    if (!ask && !review) return;
+    if (ask) setDraft({ text: ask.slice(0, 2000), n: Date.now() });
+    if (review) setReviewNow(Date.now());
+    setParams((p) => (p.delete('ask'), p.delete('review'), p), { replace: true });
+  }, [params]);
+
   // Put back what the student typed if the message never reached the tutor.
   useEffect(() => {
     if (error?.text) setDraft({ text: error.text, n: Date.now() });

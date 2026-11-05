@@ -23,6 +23,8 @@ export function createBook(input: NewBook): Promise<Book> {
     id: newId(),
     author: '',
     cover_url: null,
+    cover_mode: 'text',
+    cover_color: null,
     isbn: null,
     status: 'want',
     rating: null,

@@ -2,7 +2,7 @@ import { NavLink, useMatch } from 'react-router';
 import { PanelLeftClose, PanelLeftOpen, Plus, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useQuickAdd } from '@/features/quick-add/store';
-import { NAV_ITEMS, SETTINGS_ITEM, type NavItem } from '../nav';
+import { NAV_GROUPS, SETTINGS_ITEM, type NavItem } from '../nav';
 import { useT } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 import { Kbd, Tooltip } from '@/components/ui';
@@ -40,9 +40,14 @@ export function Sidebar({ forceCollapsed }: { forceCollapsed: boolean }) {
         <SearchButton collapsed={collapsed} onClick={() => openPalette(true)} label={t('nav.search')} />
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 pt-1">
-        {NAV_ITEMS.map((item) => (
-          <SideLink key={item.to} item={item} collapsed={collapsed} />
+      <nav className="flex flex-1 flex-col gap-4 overflow-y-auto px-3 pt-1">
+        {NAV_GROUPS.map((g) => (
+          <div key={g.labelKey} role="group" aria-label={t(g.labelKey)} className="flex flex-col gap-0.5">
+            {collapsed ? <span aria-hidden className="mx-auto my-1 h-px w-6 bg-border" /> : <p className="px-3 pb-1 text-xs font-medium text-text-3">{t(g.labelKey)}</p>}
+            {g.items.map((item) => (
+              <SideLink key={item.to} item={item} collapsed={collapsed} />
+            ))}
+          </div>
         ))}
       </nav>
 
@@ -115,7 +120,7 @@ function SideLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
       to={item.to}
       aria-label={collapsed ? label : undefined}
       className={cn(
-        'press relative flex h-11 items-center gap-3 rounded-[8px] text-base transition-colors duration-[var(--dur-fast)]',
+        'press relative flex h-10 items-center gap-3 rounded-[8px] text-base transition-colors duration-[var(--dur-fast)]',
         collapsed ? 'justify-center' : 'px-3',
         isActive ? 'text-text' : 'text-text-2 hover:bg-[color-mix(in_oklab,var(--surface-1),transparent_40%)] hover:text-text',
       )}

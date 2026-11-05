@@ -59,7 +59,7 @@ export function ReminderCenter() {
         >
           {unread ? <BellRing size={18} /> : <Bell size={18} />}
           {unread > 0 && (
-            <span className="absolute end-1.5 top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-semibold text-accent-ink tabular">
+            <span className="absolute end-1.5 top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-xs font-semibold text-accent-ink tabular">
               {unread > 9 ? '9+' : unread}
             </span>
           )}

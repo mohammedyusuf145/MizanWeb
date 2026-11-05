@@ -31,7 +31,8 @@ export const router = createBrowserRouter([
           </RequireWorkspace>
         ),
         children: [
-          { index: true, element: <Navigate to="/board" replace /> },
+          { index: true, element: <Navigate to="/today" replace /> },
+          { path: '/today', lazy: async () => ({ Component: (await import('@/routes/TodayPage')).TodayPage }) },
           { path: '/board/:boardId?', lazy: async () => ({ Component: (await import('@/routes/BoardPage')).BoardPage }) },
           { path: '/calendar', lazy: async () => ({ Component: (await import('@/routes/CalendarPage')).CalendarPage }) },
           { path: '/focus', lazy: async () => ({ Component: (await import('@/routes/FocusPage')).FocusPage }) },

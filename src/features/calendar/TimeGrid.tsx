@@ -124,7 +124,7 @@ export function TimeGrid({ days, events, now, prefs, onOpen, onCreate, onResched
                   >
                     {prefs.primary === 'hijri' ? formatDayMonth(d, lang, 'hijri').split(' ')[0] : d.getDate()}
                   </span>
-                  {secondary && <span className="max-w-full truncate px-1 text-[11px] text-text-3">{secondary}</span>}
+                  {secondary && <span className="max-w-full truncate px-1 text-xs text-text-3">{secondary}</span>}
                 </button>
               );
             })}
@@ -132,7 +132,7 @@ export function TimeGrid({ days, events, now, prefs, onOpen, onCreate, onResched
 
           {/* All-day row */}
           <div className="flex shrink-0 border-b border-border">
-            <div style={{ width: GUTTER }} className="flex shrink-0 items-start justify-end pe-2 pt-1.5 text-[11px] text-text-3">
+            <div style={{ width: GUTTER }} className="flex shrink-0 items-start justify-end pe-2 pt-1.5 text-xs text-text-3">
               {t('cal.allDay')}
             </div>
             {days.map((d, i) => (
@@ -145,7 +145,7 @@ export function TimeGrid({ days, events, now, prefs, onOpen, onCreate, onResched
             <div className="relative flex" style={{ height: 24 * 60 * PX_PER_MIN }}>
               <div style={{ width: GUTTER }} className="relative shrink-0">
                 {hours.slice(1).map((h) => (
-                  <span key={h} className="absolute end-2 -translate-y-1/2 text-[11px] text-text-3 tabular" style={{ top: h * 60 * PX_PER_MIN }}>
+                  <span key={h} className="absolute end-2 -translate-y-1/2 text-xs text-text-3 tabular" style={{ top: h * 60 * PX_PER_MIN }}>
                     {hourFmt.format(new Date(2026, 0, 1, h))}
                   </span>
                 ))}

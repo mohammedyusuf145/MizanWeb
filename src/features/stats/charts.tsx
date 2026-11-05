@@ -90,7 +90,7 @@ export function StackedColumns({ data, series, height = 220, label }: { data: St
           {ticks.map((tk) => (
             <g key={tk}>
               <line x1={rtl ? pad.e : pad.s} x2={rtl ? width - pad.s : width - pad.e} y1={y(tk)} y2={y(tk)} stroke="var(--border)" strokeWidth={1} />
-              <text x={rtl ? width - pad.s + 8 : pad.s - 8} y={y(tk)} dy="0.32em" textAnchor={rtl ? 'start' : 'end'} className="fill-[var(--text-3)] text-[11px] tabular">
+              <text x={rtl ? width - pad.s + 8 : pad.s - 8} y={y(tk)} dy="0.32em" textAnchor={rtl ? 'start' : 'end'} className="fill-[var(--text-3)] text-xs tabular">
                 {formatDuration(tk, lang)}
               </text>
             </g>
@@ -117,7 +117,7 @@ export function StackedColumns({ data, series, height = 220, label }: { data: St
                   );
                 })}
                 {(i % every === 0 || d.emphasis) && (
-                  <text x={cx} y={height - 8} textAnchor="middle" className={cn('text-[11px]', d.emphasis ? 'fill-[var(--text)] font-medium' : 'fill-[var(--text-3)]')}>
+                  <text x={cx} y={height - 8} textAnchor="middle" className={cn('text-xs', d.emphasis ? 'fill-[var(--text)] font-medium' : 'fill-[var(--text-3)]')}>
                     {d.label}
                   </text>
                 )}
@@ -191,7 +191,7 @@ export function HourColumns({ hours, highlight, color, label, hourLabel }: { hou
                 />
               )}
               {h % 6 === 0 && (
-                <text x={xOf(h)} y={height - 6} textAnchor="middle" className="fill-[var(--text-3)] text-[11px]">
+                <text x={xOf(h)} y={height - 6} textAnchor="middle" className="fill-[var(--text-3)] text-xs">
                   {hourLabel(h)}
                 </text>
               )}

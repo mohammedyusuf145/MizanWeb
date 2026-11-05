@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { ImagePlus, Search, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import { useT } from '@/lib/i18n';
 
 import { playUi } from '@/lib/uiSound';
-import { Button, Dialog, Field, IconButton, Input, Select, Spinner, toast } from '@/components/ui';
+import { Button, Dialog, Field, Input, Select, Spinner, toast } from '@/components/ui';
+import { CoverPicker } from './CoverPicker';
 import type { Book, BookStatus } from '@/types/database';
 import { BookCover } from './BookCover';
-import { coverFromFile, createBook, searchOpenLibrary } from './data';
+import { createBook, searchOpenLibrary } from './data';
 import { isArabic, statusPatch, type FoundBook } from './logic';
 
-const EMPTY = { title: '', author: '', pages: '', isbn: '', cover_url: null as string | null };
+const EMPTY = { title: '', author: '', pages: '', isbn: '', cover_url: null as string | null, cover_mode: 'text' as 'image' | 'text', cover_color: null as string | null };
 
 /** Find a book on Open Library (one tap fills everything) or type it in by hand. */
 export function AddBookDialog({ open, onOpenChange, onAdded }: { open: boolean; onOpenChange: (v: boolean) => void; onAdded: (b: Book) => void }) {
@@ -21,7 +22,6 @@ export function AddBookDialog({ open, onOpenChange, onAdded }: { open: boolean; 
   const [form, setForm] = useState(EMPTY);
   const [status, setStatus] = useState<BookStatus>('reading');
   const [busy, setBusy] = useState(false);
-  const picker = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -62,7 +62,7 @@ export function AddBookDialog({ open, onOpenChange, onAdded }: { open: boolean; 
   }, [q]);
 
   const pick = (b: FoundBook) => {
-    setForm({ title: b.title, author: b.author, pages: b.pages ? String(b.pages) : '', isbn: b.isbn ?? '', cover_url: b.cover_url });
+    setForm((f) => ({ ...f, title: b.title, author: b.author, pages: b.pages ? String(b.pages) : '', isbn: b.isbn ?? '', cover_url: b.cover_url, cover_mode: b.cover_url ? 'image' : 'text' }));
     setResults(null);
   };
 
@@ -77,6 +77,8 @@ export function AddBookDialog({ open, onOpenChange, onAdded }: { open: boolean; 
       author: form.author.trim().slice(0, 200),
       isbn: /^[0-9Xx-]{10,17}$/.test(form.isbn.trim()) ? form.isbn.trim() : null,
       cover_url: form.cover_url,
+      cover_mode: form.cover_mode === 'image' && form.cover_url ? 'image' : 'text',
+      cover_color: form.cover_color,
       language: isArabic(title) ? 'ar' : 'en',
       ...base,
       ...statusPatch(base, status),
@@ -145,53 +147,37 @@ export function AddBookDialog({ open, onOpenChange, onAdded }: { open: boolean; 
           </ul>
         )}
 
-        <div className="grid grid-cols-[88px_1fr] gap-4 border-t border-border pt-5 sm:grid-cols-[104px_1fr]">
-          <div className="flex flex-col gap-2">
-            <BookCover title={form.title || t('books.title')} author={form.author} url={form.cover_url} size="sm" />
-            {form.cover_url ? (
-              <Button size="sm" variant="ghost" iconStart={<X size={13} />} onClick={() => setForm((f) => ({ ...f, cover_url: null }))}>
-                <span className="sr-only">{t('books.cover.remove')}</span>
-              </Button>
-            ) : (
-              <IconButton size="sm" label={t('books.cover.upload')} icon={<ImagePlus size={15} />} onClick={() => picker.current?.click()} className="self-center" />
-            )}
-            <input
-              ref={picker}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              hidden
-              onChange={async (e) => {
-                const f = e.target.files?.[0];
-                e.target.value = '';
-                if (!f) return;
-                try {
-                  const url = await coverFromFile(f);
-                  setForm((x) => ({ ...x, cover_url: url }));
-                } catch {
-                  toast(t('tutor.err.unsupported'), { tone: 'danger' });
-                }
-              }}
-            />
-          </div>
-          <div className="flex min-w-0 flex-col gap-3">
-            <Field label={t('books.title')}>{({ id }) => <Input id={id} value={form.title} onChange={set('title')} dir="auto" required />}</Field>
-            <Field label={t('books.author')}>{({ id }) => <Input id={id} value={form.author} onChange={set('author')} dir="auto" />}</Field>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label={t('books.pages')}>{({ id }) => <Input id={id} value={form.pages} onChange={set('pages')} inputMode="numeric" dir="ltr" />}</Field>
-              <Field label={t('books.filter')}>
-                {({ id }) => (
-                  <Select id={id} value={status} onChange={(e) => setStatus(e.target.value as BookStatus)}>
-                    {(['reading', 'want', 'finished'] as const).map((s) => (
-                      <option key={s} value={s}>
-                        {t(`books.status.${s}`)}
-                      </option>
-                    ))}
-                  </Select>
-                )}
-              </Field>
-            </div>
+        <div className="flex flex-col gap-3 border-t border-border pt-5">
+          <Field label={t('books.title')}>{({ id }) => <Input id={id} value={form.title} onChange={set('title')} dir="auto" required />}</Field>
+          <Field label={t('books.author')}>{({ id }) => <Input id={id} value={form.author} onChange={set('author')} dir="auto" />}</Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label={t('books.pages')}>{({ id }) => <Input id={id} value={form.pages} onChange={set('pages')} inputMode="numeric" dir="ltr" />}</Field>
+            <Field label={t('books.status')}>
+              {({ id }) => (
+                <Select id={id} value={status} onChange={(e) => setStatus(e.target.value as BookStatus)}>
+                  {(['reading', 'want', 'finished'] as const).map((s) => (
+                    <option key={s} value={s}>
+                      {t(`books.status.${s}`)}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            </Field>
           </div>
         </div>
+
+        <section aria-labelledby="add-cover" className="border-t border-border pt-5">
+          <h3 id="add-cover" className="mb-3 text-sm font-semibold text-text-2">
+            {t('books.cover')}
+          </h3>
+          <CoverPicker
+            layout="row"
+            title={form.title}
+            author={form.author}
+            value={{ mode: form.cover_mode, url: form.cover_url, color: form.cover_color }}
+            onChange={(v) => setForm((f) => ({ ...f, cover_mode: v.mode, cover_url: v.url, cover_color: v.color }))}
+          />
+        </section>
       </div>
     </Dialog>
   );

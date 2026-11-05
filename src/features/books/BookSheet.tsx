@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { motion } from 'motion/react';
-import { Heart, ImagePlus, Plus, Quote, Trash2, X } from 'lucide-react';
+import { Heart, Plus, Quote, Trash2, X } from 'lucide-react';
+import { CoverPicker } from './CoverPicker';
 import { useT } from '@/lib/i18n';
 
 import { useAutosave } from '@/lib/useAutosave';
@@ -10,7 +11,7 @@ import { Button, Dialog, IconButton, Input, Segmented, Select, Sheet, Textarea, 
 import { Markdown } from '@/components/content/Markdown';
 import { BookCover } from './BookCover';
 import { StarInput } from './Stars';
-import { addQuote, coverFromFile, deleteBook, removeQuote, updateBook } from './data';
+import { addQuote, deleteBook, removeQuote, updateBook } from './data';
 import { progress, statusPatch } from './logic';
 
 /** Everything about one book, editable in place; changes save as you go. */
@@ -60,28 +61,7 @@ function BookBody({ book, onClose }: { book: Book; onClose: () => void }) {
     <div className="flex flex-col">
       <div className="flex gap-4 pb-5">
         <div className="w-24 shrink-0 sm:w-28">
-          <BookCover title={book.title} author={book.author} url={book.cover_url} size="sm" />
-          <label className="mt-2 flex cursor-pointer justify-center">
-            <span className="sr-only">{t('books.cover.upload')}</span>
-            <span className="inline-flex size-8 items-center justify-center rounded-control text-text-3 hover:bg-surface-3 hover:text-text">
-              <ImagePlus size={15} />
-            </span>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              hidden
-              onChange={async (e) => {
-                const f = e.target.files?.[0];
-                e.target.value = '';
-                if (!f) return;
-                try {
-                  await updateBook(book.id, { cover_url: await coverFromFile(f) });
-                } catch {
-                  toast(t('tutor.err.unsupported'), { tone: 'danger' });
-                }
-              }}
-            />
-          </label>
+          <BookCover title={book.title} author={book.author} url={book.cover_url} mode={book.cover_mode} color={book.cover_color} size="sm" />
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <input
@@ -116,12 +96,22 @@ function BookBody({ book, onClose }: { book: Book; onClose: () => void }) {
       </div>
 
       <Segmented
-        label={t('books.filter')}
+        label={t('books.status')}
         value={book.status}
         onValueChange={setStatus}
         className="w-full [&>*]:flex-1 [&>*]:px-1.5 [&>*]:text-sm"
         options={(['want', 'reading', 'finished', 'dropped'] as const).map((s) => ({ value: s, label: t(`books.status.${s}`) }))}
       />
+
+      <Section title={t('books.cover')}>
+        <CoverPicker
+          layout="row"
+          title={book.title}
+          author={book.author}
+          value={{ mode: book.cover_mode, url: book.cover_url, color: book.cover_color }}
+          onChange={(v) => void updateBook(book.id, { cover_mode: v.mode, cover_url: v.url, cover_color: v.color })}
+        />
+      </Section>
 
       <Section title={t('books.progress')}>
         <div className="grid grid-cols-2 gap-3">

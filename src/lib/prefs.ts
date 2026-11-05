@@ -5,7 +5,7 @@
  */
 import { create } from 'zustand';
 
-export type Accent = 'gold' | 'pearl' | 'coral' | 'iris';
+export type Accent = 'gold' | 'pearl' | 'sky' | 'iris' | 'rose' | 'coral' | 'emerald' | 'slate';
 export type MotionPref = 'system' | 'full' | 'reduce';
 export type TextSize = 'sm' | 'md' | 'lg';
 export type ArabicFont = 'plex' | 'kufi' | 'almarai';
@@ -33,7 +33,7 @@ function read(): DevicePrefs {
 
 export const usePrefs = create<DevicePrefs>(() => read());
 
-const TEXT_PX: Record<TextSize, string> = { sm: '13px', md: '14px', lg: '16px' };
+const TEXT_PX: Record<TextSize, string> = { sm: '14px', md: '15px', lg: '17px' };
 const ARABIC_FACE: Record<ArabicFont, string> = { plex: "'IBM Plex Sans Arabic'", kufi: "'Noto Kufi Arabic Variable'", almarai: "'Almarai'" };
 
 export function applyPrefs(p: DevicePrefs = usePrefs.getState()) {

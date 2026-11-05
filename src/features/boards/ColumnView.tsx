@@ -126,7 +126,7 @@ function ColumnHeader({
           {group.title}
         </h2>
       )}
-      {!editing && <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-3 px-1.5 text-[11px] font-medium text-text-2 tabular">{ids.length}</span>}
+      {!editing && <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-3 px-1.5 text-xs font-medium text-text-2 tabular">{ids.length}</span>}
       <span className="flex-1" />
       {column && !editing && (
         <Menu>
