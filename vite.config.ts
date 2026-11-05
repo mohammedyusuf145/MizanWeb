@@ -4,8 +4,19 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'node:url';
+import { execSync } from 'node:child_process';
+
+// Shown in Settings so it's easy to tell which version a device is running.
+const commit = (process.env.VERCEL_GIT_COMMIT_SHA ?? (() => {
+  try {
+    return execSync('git rev-parse HEAD').toString();
+  } catch {
+    return 'dev';
+  }
+})()).trim().slice(0, 7);
 
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(`${commit} · ${new Date().toISOString().slice(0, 10)}`) },
   plugins: [
     react(),
     tailwindcss(),

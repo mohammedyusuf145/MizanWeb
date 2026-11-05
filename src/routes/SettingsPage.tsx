@@ -253,6 +253,9 @@ export function SettingsPage() {
               </Button>
             </Row>
           </Section>
+          <p className="text-center text-xs text-text-3" dir="ltr">
+            Mizan {__APP_VERSION__}
+          </p>
         </div>
         </div>
       </PageBody>
