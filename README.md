@@ -37,13 +37,18 @@ cross-device sync. Your data stays on that device.
 
 ## Connect Supabase (accounts + sync)
 
+Step-by-step in Arabic: [docs/supabase-setup-ar.md](docs/supabase-setup-ar.md). Check the connection any time with
+`npm run check:supabase` (reads `.env.local`).
+
+
 1. Create a project at [supabase.com](https://supabase.com) (free tier is fine).
 2. Copy `.env.example` → `.env.local` and fill in **Project Settings → API**:
    ```
    VITE_SUPABASE_URL=https://<ref>.supabase.co
    VITE_SUPABASE_ANON_KEY=<anon public key>
    ```
-3. Apply the database migrations — either:
+3. Create the database — the quickest way is **one paste**: open `supabase/setup.sql` (all migrations in order,
+   regenerate with `npm run db:setup-sql`), paste it into **SQL Editor → Run**. Or apply migrations one by one:
    - **CLI:** `npx supabase login && npx supabase link --project-ref <ref> && npx supabase db push`
    - **Dashboard:** paste each file in `supabase/migrations/` (in order) into **SQL Editor → Run**.
 4. **Auth → URL Configuration:** set *Site URL* to your app URL and add `http://localhost:5173` to *Redirect URLs*.
