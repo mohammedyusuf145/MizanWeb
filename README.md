@@ -3,7 +3,7 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 5 of 6 — the AI tutor, a Books reading log and the formal "Ink & Brass" design, on top of the focus timer and stats
+> **Status:** Phase 6 of 6 — complete. Today, board, calendar, focus timer, Claude (tutor + assistant), flashcards, books and stats, on top of the focus timer and stats
 > (Phase 4), calendar and reminders (Phase 3), the board (Phase 2) and the foundation (Phase 1).
 > Repository: [github.com/mohammedyusuf145/MizanWeb](https://github.com/mohammedyusuf145/MizanWeb).
 
@@ -37,7 +37,7 @@ cross-device sync. Your data stays on that device.
 
 ## Connect Supabase (accounts + sync)
 
-Step-by-step in Arabic: [docs/supabase-setup-ar.md](docs/supabase-setup-ar.md). Check the connection any time with
+Full deployment guide in Arabic (Supabase, local run, Vercel, Claude, push reminders, troubleshooting): [docs/deploy-ar.md](docs/deploy-ar.md). Check the connection any time with
 `npm run check:supabase` (reads `.env.local`).
 
 
@@ -139,6 +139,25 @@ The tutor lives at **/tutor**: chats per subject, with a side panel showing what
 checks file types and sizes, and logs only status codes, never content or keys. The system prompt is fixed and
 written for teenagers (hints first, honest about uncertainty, age-appropriate, points to a trusted adult or 999 when
 someone may be at risk).
+
+## Today, Claude and Flashcards
+
+- **Today** (`/today`, the home page): greeting, the day's plan (overdue, due, done) with one-tap completion, the next exam
+  with a countdown and a "plan revision" shortcut to the tutor, focus goal, flashcards due and the current book.
+- **Claude** (`/tutor`): every chat is with the **study tutor** (hints first, quizzes, weak topics, explanation styles) or
+  the **general assistant** ("Ask anything": any subject, writing, design feedback, planning). The choice is fixed per chat
+  (`chat_threads.persona`, migration 0009); the Edge Function picks the system prompt and tools for it.
+- **Flashcards** (`/cards`): overview (due, new, learning, mastered), a 7-day forecast, decks per subject, browse with search
+  and stage filters, import from pasted text (`front ; back`, tab, ` - ` or ` :: `), AI generation from notes, spaced-repetition
+  review (Space, 1–4) and a practice mode that drills in random order without touching the schedule (optional answer-first).
+
+## Quality checks
+
+- `npm test`: 162 unit tests; `npx deno test --allow-env supabase/functions/`: Edge Function tests.
+- Accessibility: axe-core (WCAG 2.1 AA + best practice) on every page in Arabic dark and English light: no violations.
+- Performance: routes are lazy-loaded; KaTeX loads only with Claude/Flashcards; animation features load after first paint
+  (LazyMotion); main bundle ~315 KB (~107 KB gzip).
+- Offline: installable PWA, app shell precached, data in IndexedDB; signing in offers to import demo-mode data.
 
 ## Books
 
