@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import * as m from 'motion/react-m';
-import { BookOpenCheck, CalendarRange, GraduationCap, Layers, Lightbulb, LogIn, MessagesSquare, Palette, PanelRight, PenLine, Sparkles } from 'lucide-react';
+import { BookOpenCheck, CalendarRange, GraduationCap, Layers, Lightbulb, LogIn, MessageSquarePlus, MessagesSquare, Palette, PanelRight, PenLine, Sparkles } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import type { MessageKey } from '@/locales/en';
 import { useAuth, signOut } from '@/lib/auth';
 import { upsert } from '@/lib/db/repo';
 import { useSubjects } from '@/lib/db/hooks';
-import { Button, EmptyState, IconButton, Select, Sheet, Skeleton } from '@/components/ui';
+import { Button, IconButton, Select, Sheet, Skeleton } from '@/components/ui';
 import { PageHeader } from '@/app/shell/PageHeader';
 import { useThread, useThreads, useMessages } from '@/features/tutor/hooks';
 import { createThread, sendStudent, stop, useTutor } from '@/features/tutor/engine';
@@ -132,27 +132,7 @@ export function TutorPage() {
         title={t('nav.tutor')}
       />
 
-      {!online ? (
-        <div className="px-4 py-10 md:px-8">
-          <EmptyState
-            icon={<GraduationCap size={20} />}
-            title={t('tutor.signin.title')}
-            body={t('tutor.signin.body')}
-            action={
-              <>
-                {mode === 'demo' && tutorAvailable() && (
-                  <Button variant="primary" iconStart={<LogIn size={16} className="flip-rtl" />} onClick={() => void signOut()}>
-                    {t('tutor.signin.action')}
-                  </Button>
-                )}
-                <Button variant="secondary" iconStart={<Layers size={16} />} onClick={() => navigate('/cards')}>
-                  {t('fc.tab')}
-                </Button>
-              </>
-            }
-          />
-        </div>
-      ) : (
+      {(
         <div className="flex h-[calc(100dvh-56px-var(--bottombar-h)-env(safe-area-inset-bottom))] min-h-0 md:h-[calc(100dvh-8px-69px)]">
           <aside className="hidden w-[272px] shrink-0 border-e border-border lg:block">
             {threads ? <ThreadList threads={threads} activeId={threadId} onNew={() => navigate('/tutor')} /> : <Skeleton className="m-3 h-10" />}
@@ -165,6 +145,7 @@ export function TutorPage() {
                 {thread?.title || t('tutor.newChat')}
               </p>
               {persona === 'tutor' && subjectSelect}
+              <IconButton className="lg:hidden" label={t('tutor.newChat')} icon={<MessageSquarePlus size={18} />} onClick={() => navigate('/tutor')} />
               <IconButton className="xl:hidden" label={t('tutor.panel')} icon={<PanelRight size={18} className="flip-rtl" />} onClick={() => setContextOpen(true)} />
             </div>
 
@@ -228,7 +209,19 @@ export function TutorPage() {
               </div>
             )}
 
+            {!online && (
+              <div role="status" className="mx-3 mb-1 flex flex-wrap items-center gap-3 rounded-[10px] border border-border bg-surface-1 px-4 py-3 md:mx-8">
+                <GraduationCap size={18} className="shrink-0 text-text-3" />
+                <p className="min-w-0 flex-1 text-sm text-text-2">{t('tutor.signin.body')}</p>
+                {mode === 'demo' && tutorAvailable() && (
+                  <Button size="sm" variant="primary" iconStart={<LogIn size={14} className="flip-rtl" />} onClick={() => void signOut()}>
+                    {t('tutor.signin.action')}
+                  </Button>
+                )}
+              </div>
+            )}
             <Composer
+              disabled={!online}
               showStyle={persona === 'tutor'}
               busy={Boolean(run)}
               style={style}
