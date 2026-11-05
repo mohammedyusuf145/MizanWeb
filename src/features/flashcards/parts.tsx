@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { Paperclip, Sparkles, Trash2, X } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
@@ -97,7 +98,7 @@ export function Review({ ids, onClose, mode = 'review', reverse = false }: { ids
       <div className="flex items-center gap-3">
         <IconButton label={t('c.close')} icon={<X size={18} />} onClick={onClose} />
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-3" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
-          <motion.div className="h-full rounded-full bg-accent" animate={{ width: `${(done / Math.max(1, total)) * 100}%` }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} />
+          <m.div className="h-full rounded-full bg-accent" animate={{ width: `${(done / Math.max(1, total)) * 100}%` }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} />
         </div>
         <span className="text-sm text-text-3 tabular" dir="ltr">
           {done}/{total}
@@ -105,19 +106,19 @@ export function Review({ ids, onClose, mode = 'review', reverse = false }: { ids
       </div>
 
       {finished ? (
-        <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="mt-16 flex flex-col items-center text-center">
+        <m.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="mt-16 flex flex-col items-center text-center">
           <span className="pearl mb-5 size-16 rounded-full shadow-lift" aria-hidden />
           <h2 className="font-display text-2xl font-semibold text-text">{t('fc.done.title')}</h2>
           <p className="mt-2 max-w-[360px] text-text-2">{mode === 'practice' ? t('fc.practice.score', { n: knew, total }) : t('fc.done.body')}</p>
           <Button variant="primary" className="mt-6" onClick={onClose}>
             {t('c.done')}
           </Button>
-        </motion.div>
+        </m.div>
       ) : card ? (
         <>
           <div className="relative mt-8 [perspective:1400px]">
             <AnimatePresence mode="wait" initial={false}>
-              <motion.button
+              <m.button
                 key={card.id + String(queue.length)}
                 type="button"
                 onClick={() => setShown(true)}
@@ -128,7 +129,7 @@ export function Review({ ids, onClose, mode = 'review', reverse = false }: { ids
                 transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
                 className="relative block min-h-[300px] w-full text-start [transform-style:preserve-3d]"
               >
-                <motion.div
+                <m.div
                   className="absolute inset-0 [transform-style:preserve-3d]"
                   animate={{ rotateY: shown && !reduced ? 180 : 0 }}
                   transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
@@ -144,8 +145,8 @@ export function Review({ ids, onClose, mode = 'review', reverse = false }: { ids
                     <div className="my-4 h-px bg-border" />
                     <MathMarkdown className="text-xl font-medium">{card.back}</MathMarkdown>
                   </Face>
-                </motion.div>
-              </motion.button>
+                </m.div>
+              </m.button>
             </AnimatePresence>
           </div>
           <div className={cn('mt-6 grid gap-2', mode === 'practice' ? 'grid-cols-2' : 'grid-cols-4')}>

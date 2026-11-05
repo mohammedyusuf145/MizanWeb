@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { CalendarClock, Flag, MessageSquarePlus, MoreHorizontal, Sparkles, Trash2 } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { relativeDay, formatTime } from '@/lib/dates';
@@ -38,7 +38,7 @@ export function ThreadList({ threads, activeId, onNew, onPick }: { threads: Chat
                 aria-current={active ? 'page' : undefined}
                 className={cn('press relative flex flex-col gap-0.5 rounded-[8px] px-3 py-2.5 pe-9 transition-colors', active ? 'text-text' : 'text-text-2 hover:bg-surface-2 hover:text-text')}
               >
-                {active && <motion.span layoutId="thread-pill" aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-surface-2 shadow-card" />}
+                {active && <m.span layoutId="thread-pill" aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-surface-2 shadow-card" />}
                 <span className="relative truncate text-base" dir="auto">
                   {th.title || t('tutor.untitled')}
                 </span>
@@ -151,7 +151,7 @@ export function ContextPanel({ subjectId, onReview, persona = 'tutor' }: { subje
                   </span>
                 </div>
                 <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-3" role="img" aria-label={`${w.topic}: ${Math.round(w.rate * 100)}%`}>
-                  <motion.div
+                  <m.div
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.max(4, w.rate * 100)}%` }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { BookOpenCheck, CalendarRange, GraduationCap, Layers, Lightbulb, LogIn, MessagesSquare, Palette, PanelRight, PenLine, Sparkles } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import type { MessageKey } from '@/locales/en';
@@ -174,7 +174,7 @@ export function TutorPage() {
               <Conversation threadId={threadId} messages={[]} subjectId={subjectId} onQuick={() => {}} />
             ) : (
               <div className="min-h-0 flex-1 overflow-y-auto">
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -207,7 +207,7 @@ export function TutorPage() {
                   <p className="mt-3 max-w-[520px] text-md text-text-2">{persona === 'assistant' ? t('tutor.assistant.body') : t('tutor.empty.body')}</p>
                   <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
                     {suggestions.map((s, i) => (
-                      <motion.button
+                      <m.button
                         key={s.label}
                         type="button"
                         initial={{ opacity: 0, y: 8 }}
@@ -221,10 +221,10 @@ export function TutorPage() {
                       >
                         <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-soft text-accent-text">{s.icon}</span>
                         {t(s.label)}
-                      </motion.button>
+                      </m.button>
                     ))}
                   </div>
-                </motion.div>
+                </m.div>
               </div>
             )}
 

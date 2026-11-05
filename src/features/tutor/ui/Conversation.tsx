@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { CircleAlert, FileText, RotateCcw, ScissorsLineDashed, ShieldAlert } from 'lucide-react';
 import { useT } from '@/lib/i18n';
 import type { MessageKey } from '@/locales/en';
@@ -143,7 +144,7 @@ export function Conversation({
 
         <AnimatePresence>
           {error && !run && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -166,7 +167,7 @@ export function Conversation({
                   {t('tutor.retry')}
                 </Button>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
@@ -176,7 +177,7 @@ export function Conversation({
 
 function AssistantTurn({ children, live, continued }: { children: React.ReactNode; live?: boolean; continued?: boolean }) {
   return (
-    <motion.article
+    <m.article
       initial={live ? { opacity: 0, y: 6 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -184,13 +185,13 @@ function AssistantTurn({ children, live, continued }: { children: React.ReactNod
     >
       <span className="mt-0.5 w-[26px] shrink-0">{!continued && <LogoMark size={26} />}</span>
       <div className="min-w-0 flex-1 text-[15px]">{children}</div>
-    </motion.article>
+    </m.article>
   );
 }
 
 function UserBubble({ text, attachments, sending }: { text: string; attachments: AttachmentMeta[]; sending?: boolean }) {
   return (
-    <motion.div
+    <m.div
       initial={sending ? { opacity: 0, y: 10, scale: 0.98 } : false}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
@@ -220,7 +221,7 @@ function UserBubble({ text, attachments, sending }: { text: string; attachments:
           {text}
         </div>
       )}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -253,7 +254,7 @@ function QuickActions({ onQuick }: { onQuick: (prompt: string) => void }) {
     ['tutor.quizMe', 'tutor.quizMe.prompt'],
   ];
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="mt-3 flex flex-wrap gap-2">
+    <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="mt-3 flex flex-wrap gap-2">
       {items.map(([label, prompt]) => (
         <button
           key={label}
@@ -264,6 +265,6 @@ function QuickActions({ onQuick }: { onQuick: (prompt: string) => void }) {
           {t(label)}
         </button>
       ))}
-    </motion.div>
+    </m.div>
   );
 }

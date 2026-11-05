@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { FileUp, Layers, Play, Plus, Search, Shuffle, Sparkles } from 'lucide-react';
 import { useI18n, useT, intlLocale } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
@@ -85,11 +85,11 @@ export function CardsPage() {
         title={t('nav.cards')}
         actions={
           <div className="flex items-center gap-1">
-            <Button size="sm" variant="ghost" iconStart={<FileUp size={15} />} onClick={() => setImporting(true)}>
+            <Button size="sm" variant="ghost" className="max-sm:hidden" iconStart={<FileUp size={15} />} onClick={() => setImporting(true)}>
               <span className="max-md:sr-only">{t('fc.import')}</span>
             </Button>
             {online && (
-              <Button size="sm" variant="ghost" iconStart={<Sparkles size={15} />} onClick={() => setGenerating(true)}>
+              <Button size="sm" variant="ghost" className="max-sm:hidden" iconStart={<Sparkles size={15} />} onClick={() => setGenerating(true)}>
                 <span className="max-md:sr-only">{t('fc.generate')}</span>
               </Button>
             )}
@@ -165,7 +165,7 @@ export function CardsPage() {
                   {days.map((n, i) => (
                     <div key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5" title={`${day(i)}: ${n}`}>
                       <span className="text-xs text-text-3 tabular">{n || ''}</span>
-                      <motion.span
+                      <m.span
                         initial={{ height: 0 }}
                         animate={{ height: n ? `${Math.max(8, (n / maxDay) * 100)}%` : 3 }}
                         transition={{ duration: 0.5, delay: i * 0.03, ease: [0.2, 0.8, 0.2, 1] }}
@@ -222,9 +222,19 @@ export function CardsPage() {
 
             {/* Browse */}
             <section aria-labelledby="browse">
-              <h2 id="browse" className="mb-4 text-lg text-text">
-                {t('fc.browse')}
-              </h2>
+              <div className="mb-4 flex items-center gap-2">
+                <h2 id="browse" className="flex-1 text-lg text-text">
+                  {t('fc.browse')}
+                </h2>
+                <Button size="sm" variant="ghost" className="sm:hidden" iconStart={<FileUp size={15} />} onClick={() => setImporting(true)}>
+                  {t('fc.import')}
+                </Button>
+                {online && (
+                  <Button size="sm" variant="ghost" className="sm:hidden" iconStart={<Sparkles size={15} />} onClick={() => setGenerating(true)}>
+                    {t('fc.generate')}
+                  </Button>
+                )}
+              </div>
               <div className="mb-3 flex flex-wrap items-center gap-3">
                 <div className="relative w-full sm:w-72">
                   <Search size={16} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-text-3" />

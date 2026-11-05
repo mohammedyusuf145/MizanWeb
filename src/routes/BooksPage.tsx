@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { BookOpen, Heart, Plus } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { intlLocale } from '@/lib/i18n';
@@ -167,7 +167,7 @@ export function BooksPage() {
               ) : (
                 <ul className="grid grid-cols-3 gap-x-4 gap-y-7 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
                   {shown.map((b, i) => (
-                    <motion.li key={b.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: Math.min(i, 14) * 0.02, duration: 0.25 }}>
+                    <m.li key={b.id} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: Math.min(i, 14) * 0.02, duration: 0.25 }}>
                       <button type="button" onClick={() => openBook(b)} className="group flex w-full flex-col gap-2 text-start">
                         <span className="relative block transition-transform duration-[var(--dur-base)] ease-standard group-hover:-translate-y-1">
                           <BookCover title={b.title} author={b.author} url={b.cover_url} mode={b.cover_mode} color={b.cover_color} />
@@ -188,7 +188,7 @@ export function BooksPage() {
                           <Stars value={b.rating} size={11} />
                         </span>
                       </button>
-                    </motion.li>
+                    </m.li>
                   ))}
                 </ul>
               )}

@@ -282,15 +282,14 @@ function BlockBody({ event, height, lifted }: { event: CalEvent; height: number;
     <div
       className={cn(
         'flex h-full flex-col overflow-hidden rounded-chip border-s-[3px] px-1.5 py-0.5 text-xs leading-tight',
-        event.done ? 'text-text-3' : 'text-text',
+        event.done ? 'text-text-2 line-through decoration-text-3/60' : 'text-text',
         lifted && 'shadow-pop',
       )}
       style={{
         height,
         minWidth: lifted ? 140 : undefined,
-        background: `color-mix(in oklab, ${event.color} ${exam ? 26 : 16}%, var(--surface-2))`,
+        background: `color-mix(in oklab, ${event.color} ${event.done ? 8 : exam ? 26 : 16}%, var(--surface-2))`,
         borderInlineStartColor: event.overdue ? 'var(--danger)' : event.color,
-        opacity: event.done ? 0.6 : 1,
       }}
     >
       <span className="flex min-w-0 items-center gap-1 font-medium">
@@ -299,7 +298,7 @@ function BlockBody({ event, height, lifted }: { event: CalEvent; height: number;
           {event.card.title}
         </span>
       </span>
-      {height >= 34 && <span className="truncate text-text-3 tabular">{formatTime(event.start, lang)}</span>}
+      {height >= 34 && <span className="truncate text-text-2 tabular">{formatTime(event.start, lang)}</span>}
     </div>
   );
 }

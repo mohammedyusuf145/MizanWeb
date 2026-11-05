@@ -16,12 +16,23 @@ import { applyDocumentLang, useI18n } from './lib/i18n';
 import { initAuth } from './lib/auth';
 import { registerSW } from 'virtual:pwa-register';
 import { applyPrefs } from './lib/prefs';
+import { initInstall } from './lib/install';
+import { getT } from './lib/i18n';
+import { toast } from './components/ui';
 
 applyDocumentLang(useI18n.getState().lang);
 applyPrefs();
 void initAuth();
 // Service worker: push reminders, notification clicks, app-shell caching (production builds only).
-if (import.meta.env.PROD && 'serviceWorker' in navigator) registerSW({ immediate: true });
+initInstall();
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  registerSW({
+    immediate: true,
+    onOfflineReady: () => toast(getT()('pwa.offlineReady'), { tone: 'success' }),
+    // Look for a new version every hour while the app stays open.
+    onRegisteredSW: (_url, reg) => reg && setInterval(() => void reg.update().catch(() => {}), 60 * 60 * 1000),
+  });
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

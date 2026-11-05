@@ -42,12 +42,12 @@ export function EventChip({ event, onOpen, draggable = true }: { event: CalEvent
       className={cn(
         'relative flex h-6 min-w-0 cursor-pointer touch-manipulation items-center gap-1 rounded-chip border-s-[3px] ps-1.5 pe-1 text-xs select-none',
         'focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent',
-        event.done ? 'text-text-3 opacity-60' : 'text-text',
+        event.done ? 'text-text-3 line-through decoration-text-3/60' : 'text-text',
         isDragging && 'z-30 shadow-pop',
       )}
     >
       {exam && <Flag size={11} className="shrink-0" style={{ color: event.color }} aria-hidden />}
-      {!event.allDay && <span className="shrink-0 text-text-3 tabular">{formatTime(event.start, lang)}</span>}
+      {!event.allDay && <span className="shrink-0 text-text-2 tabular">{formatTime(event.start, lang)}</span>}
       <span className="truncate" dir="auto">
         {event.card.title}
       </span>

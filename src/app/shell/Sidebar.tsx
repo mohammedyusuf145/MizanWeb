@@ -1,6 +1,6 @@
 import { NavLink, useMatch } from 'react-router';
 import { PanelLeftClose, PanelLeftOpen, Plus, Search } from 'lucide-react';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useQuickAdd } from '@/features/quick-add/store';
 import { NAV_GROUPS, SETTINGS_ITEM, type NavItem } from '../nav';
 import { useT } from '@/lib/i18n';
@@ -126,7 +126,7 @@ function SideLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
       )}
     >
       {isActive && (
-        <motion.span layoutId={`nav-pill-${item.to === '/settings' ? 'b' : 'a'}`} aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-bg shadow-card" />
+        <m.span layoutId={`nav-pill-${item.to === '/settings' ? 'b' : 'a'}`} aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-bg shadow-card" />
       )}
       <span className="relative">
         <Icon size={19} strokeWidth={isActive ? 2.1 : 1.75} className={isActive ? 'text-accent-text' : undefined} />

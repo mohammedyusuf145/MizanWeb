@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { Flag } from 'lucide-react';
 import { useT } from '@/lib/i18n';
 import { subjectColor } from '@/design/tokens';
@@ -25,24 +25,24 @@ export function WelcomePreview() {
         <BalanceMark size={200} />
         <div className="grid w-full max-w-[600px] grid-cols-[minmax(0,1fr)_190px] gap-4">
           <div className="flex flex-col gap-2">
-            <motion.p {...rise(0)} className="mb-1 text-sm font-medium text-text-3">
+            <m.p {...rise(0)} className="mb-1 text-sm font-medium text-text-3">
               {t('welcome.week')}
-            </motion.p>
-            <motion.div {...rise(1)}>
+            </m.p>
+            <m.div {...rise(1)}>
               <PreviewCard color={math} subject={t('welcome.subject.math')} title={t('welcome.exam')} meta={t('welcome.thu')} exam />
-            </motion.div>
-            <motion.div {...rise(2)}>
+            </m.div>
+            <m.div {...rise(2)}>
               <PreviewCard color={physics} subject={t('welcome.subject.physics')} title={t('welcome.card1')} meta={t('welcome.today')} />
-            </motion.div>
-            <motion.div {...rise(3)}>
+            </m.div>
+            <m.div {...rise(3)}>
               <PreviewCard color={arabic} subject={t('welcome.subject.arabic')} title={t('welcome.card2')} meta={t('welcome.tomorrow')} />
-            </motion.div>
+            </m.div>
           </div>
-          <motion.div {...rise(2)} className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-border bg-surface-1 p-5">
+          <m.div {...rise(2)} className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-border bg-surface-1 p-5">
             <div className="relative size-[112px]">
               <svg viewBox="0 0 112 112" className="size-full -rotate-90">
                 <circle cx="56" cy="56" r="50" stroke="var(--surface-3)" strokeWidth="6" fill="none" />
-                <motion.circle
+                <m.circle
                   cx="56"
                   cy="56"
                   r="50"
@@ -61,14 +61,14 @@ export function WelcomePreview() {
               </span>
             </div>
             <span className="text-xs text-text-2">{t('welcome.focusing')}</span>
-          </motion.div>
-          <motion.div {...rise(5)} className="col-span-2 flex gap-3 rounded-[12px] border border-border bg-surface-1 p-4">
+          </m.div>
+          <m.div {...rise(5)} className="col-span-2 flex gap-3 rounded-[12px] border border-border bg-surface-1 p-4">
             <LogoMark size={30} />
             <div className="min-w-0">
               <p className="text-xs font-medium text-text-3">{t('welcome.tutorName')}</p>
               <p className="mt-0.5 text-base text-text">{t('welcome.tutor')}</p>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </div>

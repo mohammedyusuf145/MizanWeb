@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useMatch } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { Ellipsis } from 'lucide-react';
 import { DOCK_ITEMS, MORE_ITEMS, SETTINGS_ITEM, type NavItem } from '../nav';
 import { useT } from '@/lib/i18n';
@@ -32,7 +32,7 @@ export function BottomTabs() {
               aria-expanded={more}
               className={cn('press relative flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-[12px] text-xs font-medium', inMore ? 'text-text' : 'text-text-3')}
             >
-              {inMore && <motion.span layoutId="dock-pill" aria-hidden className="absolute inset-0 rounded-[12px] bg-surface-3 raised" />}
+              {inMore && <m.span layoutId="dock-pill" aria-hidden className="absolute inset-0 rounded-[12px] bg-surface-3 raised" />}
               <Ellipsis size={20} className={cn('relative', inMore && 'text-accent-text')} />
               <span className="relative">{t('nav.more')}</span>
             </button>
@@ -76,7 +76,7 @@ function Tab({ item, label }: { item: NavItem; label: string }) {
           active ? 'text-text' : 'text-text-3 active:text-text-2',
         )}
       >
-        {active && <motion.span layoutId="dock-pill" aria-hidden className="absolute inset-0 rounded-[12px] bg-surface-3 raised" />}
+        {active && <m.span layoutId="dock-pill" aria-hidden className="absolute inset-0 rounded-[12px] bg-surface-3 raised" />}
         <span className="relative">
           {item.to === '/focus' && <FocusIndicator compact />}
           <Icon size={20} strokeWidth={active ? 2.1 : 1.75} className={active ? 'text-accent-text' : undefined} />

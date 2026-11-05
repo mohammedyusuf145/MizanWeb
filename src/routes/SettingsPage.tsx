@@ -1,8 +1,9 @@
 import { useState, type ReactNode } from 'react';
-import { Check, ChevronRight, Download, LogOut, Moon, Monitor, Plus, Sun, Trash2, Volume2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { MonitorDown, Check, ChevronRight, Download, LogOut, Moon, Monitor, Plus, Sun, Trash2, Volume2 } from 'lucide-react';
+import * as m from 'motion/react-m';
 import { setPrefs, usePrefs, type Accent, type ArabicFont } from '@/lib/prefs';
 import { playUi } from '@/lib/uiSound';
+import { isIosSafari, promptInstall, useInstall } from '@/lib/install';
 import { cn } from '@/lib/cn';
 import { useI18n, useT } from '@/lib/i18n';
 import { useAuth, signOut, deleteAccount } from '@/lib/auth';
@@ -30,6 +31,8 @@ export function SettingsPage() {
   const [deleting, setDeleting] = useState(false);
   const today = new Date();
   const prefs = usePrefs();
+  const canInstall = useInstall((s) => s.prompt !== null);
+  const installed = useInstall((s) => s.installed);
   const sections = [
     ['appearance', t('settings.appearance')],
     ['region', t('settings.region')],
@@ -218,6 +221,13 @@ export function SettingsPage() {
           </Section>
 
           <Section id="account" title={t('settings.account')}>
+            <Row label={t('pwa.install')} hint={installed ? t('pwa.install.done') : isIosSafari() ? t('pwa.install.ios') : canInstall ? t('pwa.install.hint') : t('pwa.install.unavailable')}>
+              {canInstall && !installed && (
+                <Button iconStart={<MonitorDown size={16} />} onClick={() => void promptInstall()}>
+                  {t('pwa.install.run')}
+                </Button>
+              )}
+            </Row>
             <p className="py-3 text-base text-text-2">
               {mode === 'cloud' ? t('settings.account.signedIn', { email: email ?? '' }) : t('settings.account.demo')}
             </p>
@@ -347,9 +357,9 @@ function ThemeTiles({ value, onChange }: { value: 'dark' | 'light' | 'system'; o
                 <span className="absolute start-2 top-5 h-1.5 w-5 rounded-full bg-accent" />
               </span>
             </span>
-            <span className="flex items-center gap-1.5 px-1 pb-0.5 text-sm text-text-2">
-              {o.icon}
-              <span className="truncate">{o.label}</span>
+            <span className="flex items-start gap-1.5 px-1 pb-0.5 text-start text-sm leading-tight text-text-2">
+              <span className="mt-0.5 shrink-0">{o.icon}</span>
+              <span>{o.label}</span>
             </span>
           </button>
         );
@@ -392,7 +402,7 @@ function AccentPicker() {
             }}
             className="press relative inline-flex size-10 items-center justify-center rounded-full"
           >
-            {on && <motion.span layoutId="accent-ring" className="absolute inset-0 rounded-full border-2" style={{ borderColor: theme === 'light' ? a.light : a.dark }} />}
+            {on && <m.span layoutId="accent-ring" className="absolute inset-0 rounded-full border-2" style={{ borderColor: theme === 'light' ? a.light : a.dark }} />}
             <span className="inline-flex size-7 items-center justify-center rounded-full" style={{ background: theme === 'light' ? a.light : a.dark }}>
               {on && <Check size={14} strokeWidth={3} className={theme === 'light' ? 'text-white' : 'text-[#0f151f]'} />}
             </span>
@@ -429,7 +439,7 @@ function ArabicFontTiles() {
             <span lang="ar" dir="rtl" className="text-xl leading-tight text-text" style={{ fontFamily: f.face }}>
               ميزان
             </span>
-            <span className="text-xs text-text-3">{t(`settings.arabicFont.${f.v}`)}</span>
+            <span className="text-xs text-text-2">{t(`settings.arabicFont.${f.v}`)}</span>
           </button>
         );
       })}

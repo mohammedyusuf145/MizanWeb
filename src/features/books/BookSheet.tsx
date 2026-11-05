@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { Heart, Plus, Quote, Trash2, X } from 'lucide-react';
 import { CoverPicker } from './CoverPicker';
 import { useT } from '@/lib/i18n';
@@ -149,7 +149,7 @@ function BookBody({ book, onClose }: { book: Book; onClose: () => void }) {
         </div>
         {p !== null && (
           <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-surface-3" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(p * 100)} aria-label={t('books.progress')}>
-            <motion.div className="h-full rounded-full bg-accent" animate={{ width: `${p * 100}%` }} transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }} />
+            <m.div className="h-full rounded-full bg-accent" animate={{ width: `${p * 100}%` }} transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }} />
           </div>
         )}
         <div className="mt-4 grid grid-cols-2 gap-3">

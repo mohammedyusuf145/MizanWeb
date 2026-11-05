@@ -62,7 +62,7 @@ export function CardTile({
           {subject && (
             <span
               className="inline-flex h-[22px] max-w-full min-w-0 items-center gap-1.5 rounded-full px-2 text-xs font-medium"
-              style={{ background: `color-mix(in oklab, ${subject.color} 16%, transparent)`, color, opacity: done ? 0.7 : 1 }}
+              style={{ background: `color-mix(in oklab, ${subject.color} ${done ? 10 : 16}%, transparent)`, color }}
             >
               <SubjectDot color={subject.color} size={6} />
               <span className="truncate">{subject.name}</span>

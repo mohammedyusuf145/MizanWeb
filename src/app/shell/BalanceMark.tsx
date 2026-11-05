@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useReducedMotion } from '@/lib/prefs';
 
 /**
@@ -24,7 +24,7 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
           <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <motion.circle
+      <m.circle
         cx="110"
         cy="96"
         r="96"
@@ -35,7 +35,7 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
         style={{ transformOrigin: '110px 96px' }}
       />
       {/* Fulcrum */}
-      <motion.path
+      <m.path
         d="M110 142 94 174h32L110 142Z"
         fill="var(--text)"
         fillOpacity="0.9"
@@ -44,14 +44,14 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
         transition={{ duration: 0.5, ease }}
       />
       {/* Beam: tips under the pearl's weight, then finds level */}
-      <motion.g
+      <m.g
         style={{ transformOrigin: '110px 140px' }}
         initial={reduced ? false : { rotate: -6, opacity: 0 }}
         animate={reduced ? { rotate: 0, opacity: 1 } : { rotate: [-6, -6, 3, 0], opacity: [0, 1, 1, 1] }}
         transition={{ duration: 1.5, times: [0, 0.25, 0.6, 1], ease: 'easeInOut' }}
       >
         <rect x="34" y="135" width="152" height="10" rx="2" fill="var(--accent)" />
-        <motion.circle
+        <m.circle
           cx="110"
           cy="100"
           r="32"
@@ -60,7 +60,7 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 26 }}
         />
-      </motion.g>
+      </m.g>
     </svg>
   );
 }

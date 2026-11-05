@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ClipboardEvent, type DragEvent, type KeyboardEvent } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
+import * as m from 'motion/react-m';
 import { ArrowUp, FileText, Paperclip, Square, X } from 'lucide-react';
 import { useT } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
@@ -122,7 +123,7 @@ export function Composer({
       >
         <AnimatePresence initial={false}>
           {files.length > 0 && (
-            <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-wrap gap-2 overflow-hidden px-3 pt-3">
+            <m.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="flex flex-wrap gap-2 overflow-hidden px-3 pt-3">
               {files.map((f, i) => (
                 <li key={i} className="relative">
                   {f.meta.thumb ? (
@@ -145,7 +146,7 @@ export function Composer({
                   </button>
                 </li>
               ))}
-            </motion.ul>
+            </m.ul>
           )}
         </AnimatePresence>
         <label className="sr-only" htmlFor="tutor-input">

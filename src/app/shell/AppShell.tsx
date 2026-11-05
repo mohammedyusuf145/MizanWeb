@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router';
 import { Suspense } from 'react';
-import { MotionConfig, motion } from 'motion/react';
+import { MotionConfig } from 'motion/react';
+import * as m from 'motion/react-m';
 import { useReducedMotion } from '@/lib/prefs';
 import { useT } from '@/lib/i18n';
 import { useMediaQuery } from '@/lib/useMediaQuery';
@@ -46,7 +47,7 @@ export function AppShell() {
         tabIndex={-1}
         className="min-w-0 flex-1 bg-bg pb-[calc(var(--bottombar-h)+env(safe-area-inset-bottom))] [overflow:clip] focus:outline-none md:mt-2 md:me-2 md:min-h-[calc(100dvh-8px)] md:rounded-t-[var(--radius-canvas)] md:border md:border-b-0 md:border-border md:pb-0 md:shadow-card"
       >
-        <motion.div
+        <m.div
           key={section}
           initial={reduced ? false : { opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,7 +57,7 @@ export function AppShell() {
           <Suspense fallback={<RouteFallback />}>
             <Outlet />
           </Suspense>
-        </motion.div>
+        </m.div>
       </main>
       <BottomTabs />
       <CommandPalette />

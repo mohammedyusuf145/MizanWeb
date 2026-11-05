@@ -3,7 +3,7 @@
  * the button here; their decision goes back to the tutor as the tool's result.
  */
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { CalendarClock, Check, CircleAlert, Flag, Layers, ListChecks, Pencil, X } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { formatDate, formatTime } from '@/lib/dates';
@@ -40,7 +40,7 @@ export interface WidgetProps {
 
 function Shell({ icon, title, children, tone = 'default' }: { icon: ReactNode; title: ReactNode; children: ReactNode; tone?: 'default' | 'muted' }) {
   return (
-    <motion.section
+    <m.section
       initial={{ opacity: 0, y: 8, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
@@ -51,7 +51,7 @@ function Shell({ icon, title, children, tone = 'default' }: { icon: ReactNode; t
         {title}
       </header>
       <div className="p-4">{children}</div>
-    </motion.section>
+    </m.section>
   );
 }
 

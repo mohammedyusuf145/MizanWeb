@@ -1,6 +1,9 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useAuth } from '@/lib/auth';
+import { toast } from '@/components/ui';
+import { demoDataCount, dismissDemoImport, importDemoData } from '@/features/settings/demoImport';
 import { Link, useNavigate } from 'react-router';
-import { motion } from 'motion/react';
+import * as m from 'motion/react-m';
 import { BookOpen, Check, Flag, GraduationCap, Layers, Plus, Timer } from 'lucide-react';
 import { useI18n, useT } from '@/lib/i18n';
 import { formatDate, formatDateLong, formatTime, relativeDay, startOfDay } from '@/lib/dates';
@@ -58,13 +61,14 @@ export function TodayPage() {
     <>
       <PageHeader title={t('nav.today')} meta={formatDateLong(now, lang, settings.calendar_primary)} />
       <PageBody>
-        <motion.section initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mb-8">
+        <DemoImportBanner />
+        <m.section initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mb-8">
           <h2 className="font-display text-3xl text-text">{name ? t('today.greetName', { greet, name }) : greet}</h2>
           <p className="mt-2 text-md text-text-2">
             {summary.join(' · ')}
             {secondary && <span className="text-text-3"> · {secondary}</span>}
           </p>
-        </motion.section>
+        </m.section>
 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
           {/* Plan */}
@@ -265,5 +269,43 @@ function Group({
         })}
       </ul>
     </div>
+  );
+}
+
+/** Shown once after signing in when this browser still holds demo-mode data. */
+function DemoImportBanner() {
+  const t = useT();
+  const mode = useAuth((s) => s.mode);
+  const [n, setN] = useState(0);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    if (mode === 'cloud') void demoDataCount().then(setN).catch(() => setN(0));
+  }, [mode]);
+  if (!n) return null;
+  return (
+    <section role="region" aria-label={t('demo.import.title')} className="mb-6 flex flex-col gap-3 rounded-[12px] border border-accent/40 bg-accent-soft px-5 py-4 sm:flex-row sm:items-center">
+      <div className="min-w-0 flex-1">
+        <p className="text-base font-medium text-text">{t('demo.import.title')}</p>
+        <p className="mt-0.5 text-sm text-text-2">{t('demo.import.body', { n })}</p>
+      </div>
+      <div className="flex gap-2">
+        <Button variant="ghost" onClick={() => (dismissDemoImport(), setN(0))}>
+          {t('demo.import.dismiss')}
+        </Button>
+        <Button
+          variant="primary"
+          loading={busy}
+          onClick={async () => {
+            setBusy(true);
+            const done = await importDemoData();
+            setBusy(false);
+            setN(0);
+            toast(t('demo.import.done', { n: done }), { tone: 'success' });
+          }}
+        >
+          {t('demo.import.run')}
+        </Button>
+      </div>
+    </section>
   );
 }
