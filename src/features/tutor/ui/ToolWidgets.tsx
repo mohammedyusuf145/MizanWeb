@@ -44,7 +44,7 @@ function Shell({ icon, title, children, tone = 'default' }: { icon: ReactNode; t
       initial={{ opacity: 0, y: 8, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-      className={cn('my-3 overflow-hidden rounded-[18px] border bg-surface-1', tone === 'muted' ? 'border-border' : 'border-border-strong shadow-card')}
+      className={cn('my-3 overflow-hidden rounded-[12px] border bg-surface-1', tone === 'muted' ? 'border-border' : 'border-border-strong shadow-card')}
     >
       <header className="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-medium text-text-2">
         <span className="text-accent-text">{icon}</span>
@@ -145,7 +145,7 @@ function ProposeCards(p: WidgetProps) {
         {input.cards.map((c, i) => {
           const due = c.due_date ? new Date(dueFrom(c.due_date, c.due_time).due_at) : null;
           return (
-            <li key={i} className="flex items-start gap-3 rounded-[12px] border border-border bg-surface-2 px-3 py-2.5">
+            <li key={i} className="flex items-start gap-3 rounded-[8px] border border-border bg-surface-2 px-3 py-2.5">
               {editable && (
                 <span className="pt-0.5">
                   <Checkbox checked={picked[i] ?? false} onCheckedChange={(v) => setPicked((s) => s.map((x, j) => (j === i ? v : x)))} />
@@ -348,7 +348,7 @@ function Quiz(p: WidgetProps) {
                         disabled={!editable}
                         onClick={() => setAnswers((s) => s.map((x, j) => (j === i ? c : x)))}
                         className={cn(
-                          'press flex min-h-11 items-center gap-2 rounded-[12px] border px-3 py-2 text-start text-base transition-colors',
+                          'press flex min-h-11 items-center gap-2 rounded-[8px] border px-3 py-2 text-start text-base transition-colors',
                           chosen && editable && 'border-accent bg-accent-soft text-text',
                           !chosen && editable && 'border-border bg-surface-2 text-text-2 hover:border-border-strong',
                           isRight && 'border-success bg-[color-mix(in_oklab,var(--success)_12%,transparent)] text-text',
@@ -375,7 +375,7 @@ function Quiz(p: WidgetProps) {
                 />
               )}
               {graded && (
-                <div className="mt-2 rounded-[12px] bg-surface-2 px-3 py-2 text-sm">
+                <div className="mt-2 rounded-[8px] bg-surface-2 px-3 py-2 text-sm">
                   {q.kind === 'mcq' ? (
                     <p className={graded.correct ? 'text-success' : 'text-danger'}>{graded.correct ? t('tw.quiz.correct') : t('tw.quiz.incorrect')}</p>
                   ) : (
@@ -422,7 +422,7 @@ function Flashcards(p: WidgetProps) {
     <Shell icon={<Layers size={15} />} title={input.topic || t('fc.tab')} tone={p.result ? 'muted' : 'default'}>
       <ul className="grid gap-2 sm:grid-cols-2">
         {input.cards.map((c, i) => (
-          <li key={i} className={cn('flex gap-3 rounded-[14px] border border-border bg-surface-2 p-3', editable && !picked[i] && 'opacity-55')}>
+          <li key={i} className={cn('flex gap-3 rounded-[10px] border border-border bg-surface-2 p-3', editable && !picked[i] && 'opacity-55')}>
             {editable && (
               <span className="pt-0.5">
                 <Checkbox checked={picked[i] ?? false} onCheckedChange={(v) => setPicked((s) => s.map((x, j) => (j === i ? v : x)))} />

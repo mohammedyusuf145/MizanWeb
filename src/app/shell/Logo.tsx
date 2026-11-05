@@ -16,10 +16,10 @@ export function LogoMark({ size = 24, framed = true }: { size?: number; framed?:
           <stop offset="1" stopColor="#c4b2ea" />
         </radialGradient>
       </defs>
-      {framed && <rect x="0.5" y="0.5" width="23" height="23" rx="7" fill="#0e182b" stroke="rgb(170 195 255 / 0.18)" />}
+      {framed && <rect x="0.5" y="0.5" width="23" height="23" rx="7" fill="#0f151f" stroke="rgb(180 195 220 / 0.2)" />}
       <circle cx="12" cy="9.25" r="4.25" fill={`url(#p${id})`} />
       <path d="M4.75 15h14.5" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" />
-      <path d="M12 15.6 9.6 19.25h4.8L12 15.6Z" fill="#eef2fa" fillOpacity="0.85" />
+      <path d="M12 15.6 9.6 19.25h4.8L12 15.6Z" fill="#e8ecf2" fillOpacity="0.85" />
     </svg>
   );
 }

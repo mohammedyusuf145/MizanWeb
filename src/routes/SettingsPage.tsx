@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Check, ChevronRight, Download, LogOut, Moon, Monitor, Plus, Sun, Trash2, Volume2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { setPrefs, usePrefs, type Accent } from '@/lib/prefs';
+import { setPrefs, usePrefs, type Accent, type ArabicFont } from '@/lib/prefs';
 import { playUi } from '@/lib/uiSound';
 import { cn } from '@/lib/cn';
 import { useI18n, useT } from '@/lib/i18n';
@@ -59,6 +59,9 @@ export function SettingsPage() {
             </Row>
             <Row label={t('settings.accent')} hint={t('settings.deviceOnly')}>
               <AccentPicker />
+            </Row>
+            <Row label={t('settings.arabicFont')} hint={t('settings.arabicFont.hint')}>
+              <ArabicFontTiles />
             </Row>
             <Row label={t('settings.textSize')}>
               <Segmented
@@ -290,7 +293,7 @@ export function SettingsPage() {
 
 function Section({ id, title, hint, action, children }: { id: string; title: string; hint?: string; action?: ReactNode; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-24 rounded-[20px] border border-border bg-surface-1 px-5 pt-5 pb-1 md:px-6">
+    <section id={id} aria-labelledby={`${id}-h`} className="scroll-mt-24 rounded-[14px] border border-border bg-surface-1 px-5 pt-5 pb-1 md:px-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 id={`${id}-h`} className="font-display text-lg font-semibold text-text">
@@ -321,9 +324,9 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
 function ThemeTiles({ value, onChange }: { value: 'dark' | 'light' | 'system'; onChange: (v: 'dark' | 'light' | 'system') => void }) {
   const t = useT();
   const opts = [
-    { v: 'dark' as const, label: t('settings.theme.dark'), icon: <Moon size={13} />, frame: '#08101f', canvas: '#16233d', line: '#2a3a5c' },
-    { v: 'light' as const, label: t('settings.theme.light'), icon: <Sun size={13} />, frame: '#e4e9f2', canvas: '#ffffff', line: '#d5dce8' },
-    { v: 'system' as const, label: t('settings.theme.system'), icon: <Monitor size={13} />, frame: 'linear-gradient(135deg,#08101f 50%,#e4e9f2 50%)', canvas: 'linear-gradient(135deg,#16233d 50%,#fff 50%)', line: '#8794ae' },
+    { v: 'dark' as const, label: t('settings.theme.dark'), icon: <Moon size={13} />, frame: '#0b1018', canvas: '#19212d', line: '#2c3646' },
+    { v: 'light' as const, label: t('settings.theme.light'), icon: <Sun size={13} />, frame: '#e8ebf0', canvas: '#ffffff', line: '#d7dbe2' },
+    { v: 'system' as const, label: t('settings.theme.system'), icon: <Monitor size={13} />, frame: 'linear-gradient(135deg,#0b1018 50%,#e8ebf0 50%)', canvas: 'linear-gradient(135deg,#19212d 50%,#fff 50%)', line: '#8a94a3' },
   ];
   return (
     <div role="radiogroup" aria-label={t('settings.theme')} className="grid grid-cols-3 gap-2 sm:w-[360px]">
@@ -336,7 +339,7 @@ function ThemeTiles({ value, onChange }: { value: 'dark' | 'light' | 'system'; o
             role="radio"
             aria-checked={on}
             onClick={() => onChange(o.v)}
-            className={cn('press group flex flex-col gap-2 rounded-[14px] border p-1.5 text-start transition-colors', on ? 'border-accent' : 'border-border hover:border-border-strong')}
+            className={cn('press group flex flex-col gap-2 rounded-[10px] border p-1.5 text-start transition-colors', on ? 'border-accent' : 'border-border hover:border-border-strong')}
           >
             <span className="relative block h-14 overflow-hidden rounded-[10px]" style={{ background: o.frame }}>
               <span className="absolute inset-y-2 end-0 start-5 rounded-s-[7px]" style={{ background: o.canvas }}>
@@ -356,10 +359,10 @@ function ThemeTiles({ value, onChange }: { value: 'dark' | 'light' | 'system'; o
 }
 
 const ACCENTS: { v: Accent; dark: string; light: string }[] = [
-  { v: 'gold', dark: '#f0b54a', light: '#e3a21a' },
-  { v: 'pearl', dark: '#5fd0c5', light: '#0b7a72' },
-  { v: 'coral', dark: '#ff9473', light: '#b4431f' },
-  { v: 'iris', dark: '#a7b0ff', light: '#4652c9' },
+  { v: 'gold', dark: '#d4af6a', light: '#8a6416' },
+  { v: 'pearl', dark: '#7fb8c9', light: '#0f6274' },
+  { v: 'coral', dark: '#e59a84', light: '#a3432a' },
+  { v: 'iris', dark: '#a9b4f0', light: '#3f4bb5' },
 ];
 
 function AccentPicker() {
@@ -387,8 +390,42 @@ function AccentPicker() {
           >
             {on && <motion.span layoutId="accent-ring" className="absolute inset-0 rounded-full border-2" style={{ borderColor: theme === 'light' ? a.light : a.dark }} />}
             <span className="inline-flex size-7 items-center justify-center rounded-full" style={{ background: theme === 'light' ? a.light : a.dark }}>
-              {on && <Check size={14} strokeWidth={3} className={theme === 'light' && a.v !== 'gold' ? 'text-white' : 'text-[#0e182b]'} />}
+              {on && <Check size={14} strokeWidth={3} className={theme === 'light' ? 'text-white' : 'text-[#0f151f]'} />}
             </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+const ARABIC_FONTS: { v: ArabicFont; face: string }[] = [
+  { v: 'plex', face: "'IBM Plex Sans Arabic'" },
+  { v: 'kufi', face: "'Noto Kufi Arabic Variable'" },
+  { v: 'almarai', face: "'Almarai'" },
+];
+
+/** Each option is previewed in its own face, so the choice is made by eye. */
+function ArabicFontTiles() {
+  const t = useT();
+  const font = usePrefs((s) => s.arabicFont);
+  return (
+    <div role="radiogroup" aria-label={t('settings.arabicFont')} className="grid grid-cols-3 gap-2 sm:w-[360px]">
+      {ARABIC_FONTS.map((f) => {
+        const on = font === f.v;
+        return (
+          <button
+            key={f.v}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            onClick={() => setPrefs({ arabicFont: f.v })}
+            className={cn('press flex flex-col items-center gap-1 rounded-[10px] border px-2 py-3 transition-colors', on ? 'border-accent bg-accent-soft' : 'border-border hover:border-border-strong')}
+          >
+            <span lang="ar" dir="rtl" className="text-xl leading-tight text-text" style={{ fontFamily: f.face }}>
+              ميزان
+            </span>
+            <span className="text-xs text-text-3">{t(`settings.arabicFont.${f.v}`)}</span>
           </button>
         );
       })}

@@ -3,7 +3,7 @@
 A personal study operating system: a task board, a focus timer and an AI tutor that share one set of data.
 Bilingual (Arabic RTL / English), offline-first, installable as a PWA.
 
-> **Status:** Phase 5 of 6 — the AI tutor and a full redesign ("Pearl & Tide"), on top of the focus timer and stats
+> **Status:** Phase 5 of 6 — the AI tutor, a Books reading log and the formal "Ink & Brass" design, on top of the focus timer and stats
 > (Phase 4), calendar and reminders (Phase 3), the board (Phase 2) and the foundation (Phase 1).
 > Repository: [github.com/mohammedyusuf145/MizanWeb](https://github.com/mohammedyusuf145/MizanWeb).
 
@@ -135,10 +135,19 @@ checks file types and sizes, and logs only status codes, never content or keys. 
 written for teenagers (hints first, honest about uncertainty, age-appropriate, points to a trusted adult or 999 when
 someone may be at risk).
 
+## Books
+
+**/books** is a reading log: add a book by searching Open Library (title, author or ISBN: one tap fills the cover and page
+count) or by hand, with your own photo as the cover. Each book has a status (want to read, reading, finished, stopped),
+a 1–5 rating, page progress, start and finish dates, genre and language, a favourite flag, Markdown notes and a list of
+quotes with page numbers. The page shows the year at a glance (books finished, pages read, average rating, books per
+month), what you're reading now, and the shelf with filters and sorting. Books without an image get a typeset cover.
+Apply `supabase/migrations/20261105000007_books.sql` to sync them.
+
 ## Appearance, sound and motion
 
-**Settings → Appearance:** dark ("Tide") or light ("Pearl") or match the device; accent colour (saffron, pearl teal,
-coral, iris); text size; motion (match device, full, reduced). **Sound and feel:** short synthesised tones when you
+**Settings → Appearance:** dark ("Ink") or light ("Paper") or match the device; accent colour (brass, teal, coral,
+iris); Arabic font (IBM Plex, Noto Kufi, Almarai); text size; motion (match device, full, reduced). **Sound and feel:** short synthesised tones when you
 complete a task, add a card or get an answer, with volume and phone vibration. These are saved on the device.
 
 ## Scripts
@@ -194,13 +203,12 @@ supabase/
 Open **`/design`** in the app (or *Design system* in the ⌘K / Ctrl+K palette) to see every token and component.
 Switch language and theme from the palette to check RTL and light mode.
 
-Concept **Pearl & Tide**: the Gulf at night and pearl nacre, with saffron gold from the souq. The app sits on a
-canvas laid over a darker frame, like a sheet on a designer's desk.
+Concept **Ink & Brass**: formal and quiet, so the content leads. The app sits on a canvas over a darker frame.
 
-- Dark: frame `#08101F`, canvas `#0E182B`, surfaces `#111D33 → #1D2C4A`, text `#EEF2FA / #AEB9CF / #8794AE`.
-  Light: frame `#E4E9F2`, canvas `#F5F7FB`, cards `#FFFFFF`, text `#0E1830 / #46526B / #5B6781`.
-  Accent saffron `#F0B54A` (dark) / `#E3A21A` (light) plus three alternatives; every pair is checked for WCAG AA.
-- The pearl gradient appears only on the logo, the tutor and the welcome moment.
-- Type: Readex Pro for text in both scripts; Bricolage Grotesque (Latin) and Reem Kufi (Arabic) for headings.
-- Radius by role (6 / 10 / 12 / 14 / 20 / 22). Motion uses a soft out-expo curve (140–420ms) and Motion springs for
-  the sliding nav pill, cards and the flashcard flip; everything falls back to fades under reduced motion.
+- Dark: frame `#0B1018`, canvas `#0F151F`, surfaces `#141B26 → #202936`, text `#E8ECF2 / #A7B0BE / #8A94A3`.
+  Light: frame `#E8EBF0`, canvas `#F6F7F9`, cards `#FFFFFF`, text `#111827 / #4A5363 / #5F6878`.
+  Accent brass `#D4AF6A` (dark) / `#8A6416` (light) plus three alternatives; every pair is checked for WCAG AA.
+- Type: IBM Plex Sans + IBM Plex Sans Arabic for text, Noto Kufi Arabic for Arabic headings, Noto Serif / Noto Naskh
+  Arabic for reading notes, quotes and book covers.
+- Radius by role (4 / 8 / 10 / 12 / 16). Motion is short and calm (140–360ms ease-out, no overshoot) and falls back to
+  fades under reduced motion.

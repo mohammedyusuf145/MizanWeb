@@ -36,9 +36,9 @@ export function ThreadList({ threads, activeId, onNew, onPick }: { threads: Chat
                 to={`/tutor/${th.id}`}
                 onClick={onPick}
                 aria-current={active ? 'page' : undefined}
-                className={cn('press relative flex flex-col gap-0.5 rounded-[12px] px-3 py-2.5 pe-9 transition-colors', active ? 'text-text' : 'text-text-2 hover:bg-surface-2 hover:text-text')}
+                className={cn('press relative flex flex-col gap-0.5 rounded-[8px] px-3 py-2.5 pe-9 transition-colors', active ? 'text-text' : 'text-text-2 hover:bg-surface-2 hover:text-text')}
               >
-                {active && <motion.span layoutId="thread-pill" aria-hidden className="absolute inset-0 rounded-[12px] border border-border bg-surface-2 shadow-card" />}
+                {active && <motion.span layoutId="thread-pill" aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-surface-2 shadow-card" />}
                 <span className="relative truncate text-base" dir="auto">
                   {th.title || t('tutor.untitled')}
                 </span>
@@ -118,7 +118,7 @@ export function ContextPanel({ subjectId, onReview }: { subjectId: string | null
             {upcoming.map((c) => {
               const d = new Date(c.due_at!);
               return (
-                <li key={c.id} className="rounded-[12px] border border-border bg-surface-2 px-3 py-2">
+                <li key={c.id} className="rounded-[8px] border border-border bg-surface-2 px-3 py-2">
                   <p className="truncate text-sm text-text" dir="auto">
                     {c.title}
                   </p>
@@ -164,7 +164,7 @@ export function ContextPanel({ subjectId, onReview }: { subjectId: string | null
         )}
       </section>
 
-      <section className="rounded-[16px] border border-border bg-surface-2 p-4">
+      <section className="rounded-[12px] border border-border bg-surface-2 p-4">
         <h3 className="text-sm font-medium text-text-2">{t('tutor.panel.cards')}</h3>
         <p className="mt-1 font-display text-2xl font-semibold text-text tabular">{t('tutor.panel.due', { n: due })}</p>
         <Button size="sm" variant={due ? 'primary' : 'secondary'} className="mt-3" onClick={onReview}>

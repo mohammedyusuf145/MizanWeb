@@ -55,7 +55,7 @@ export function ColumnView(props: Props) {
       style={style}
       aria-labelledby={`grp-${group.id}`}
       className={cn(
-        'flex max-h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col rounded-[18px] border border-border bg-surface-1 p-2 md:w-[300px] xl:w-[320px]',
+        'flex max-h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col rounded-[12px] border border-border bg-surface-1 p-2 md:w-[300px] xl:w-[320px]',
         sortable.isDragging && 'opacity-40',
       )}
     >

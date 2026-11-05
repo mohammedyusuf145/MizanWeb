@@ -194,7 +194,7 @@ export function TutorPage() {
                           if (s.style) setStyle(s.style);
                           setDraft({ text: t(s.prompt), n: Date.now() });
                         }}
-                        className="lift press flex items-center gap-3 rounded-[16px] border border-border bg-surface-1 px-4 py-3.5 text-start text-base text-text-2 hover:text-text"
+                        className="lift press flex items-center gap-3 rounded-[12px] border border-border bg-surface-1 px-4 py-3.5 text-start text-base text-text-2 hover:text-text"
                       >
                         <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-soft text-accent-text">{s.icon}</span>
                         {t(s.label)}

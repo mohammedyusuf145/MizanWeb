@@ -148,7 +148,7 @@ export function Conversation({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               role="alert"
-              className="flex flex-col gap-3 rounded-[16px] border border-danger/30 bg-danger-soft px-4 py-3 sm:flex-row sm:items-center"
+              className="flex flex-col gap-3 rounded-[12px] border border-danger/30 bg-danger-soft px-4 py-3 sm:flex-row sm:items-center"
             >
               <p className="flex flex-1 items-start gap-2 text-base text-text">
                 <CircleAlert size={16} className="mt-0.5 shrink-0 text-danger" />
@@ -200,9 +200,9 @@ function UserBubble({ text, attachments, sending }: { text: string; attachments:
         <div className="flex flex-wrap justify-end gap-2">
           {attachments.map((a, i) =>
             a.thumb ? (
-              <img key={i} src={a.thumb} alt={a.name} className="h-24 w-auto max-w-[180px] rounded-[14px] border border-border object-cover" />
+              <img key={i} src={a.thumb} alt={a.name} className="h-24 w-auto max-w-[180px] rounded-[10px] border border-border object-cover" />
             ) : (
-              <span key={i} className="inline-flex h-10 max-w-[220px] items-center gap-2 rounded-[12px] border border-border bg-surface-2 px-3 text-sm text-text-2">
+              <span key={i} className="inline-flex h-10 max-w-[220px] items-center gap-2 rounded-[8px] border border-border bg-surface-2 px-3 text-sm text-text-2">
                 <FileText size={15} className="shrink-0" />
                 <span className="truncate" dir="auto">
                   {a.name}
@@ -214,7 +214,7 @@ function UserBubble({ text, attachments, sending }: { text: string; attachments:
       )}
       {text && (
         <div
-          className={cn('max-w-full rounded-[18px] rounded-ee-[6px] bg-surface-3 px-4 py-2.5 text-[15px] whitespace-pre-wrap text-text', sending && 'opacity-80')}
+          className={cn('max-w-full rounded-[12px] rounded-ee-[6px] bg-surface-3 px-4 py-2.5 text-[15px] whitespace-pre-wrap text-text', sending && 'opacity-80')}
           dir="auto"
         >
           {text}
@@ -226,7 +226,7 @@ function UserBubble({ text, attachments, sending }: { text: string; attachments:
 
 function Notice({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <p className="my-2 flex items-start gap-2 rounded-[12px] bg-surface-1 px-3 py-2 text-sm text-text-2">
+    <p className="my-2 flex items-start gap-2 rounded-[8px] bg-surface-1 px-3 py-2 text-sm text-text-2">
       <span className="mt-0.5 shrink-0 text-text-3">{icon}</span>
       {children}
     </p>

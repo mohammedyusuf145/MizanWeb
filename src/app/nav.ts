@@ -1,4 +1,4 @@
-import { CalendarDays, ChartColumn, GraduationCap, LayoutGrid, Settings, Timer, type LucideIcon } from 'lucide-react';
+import { BookOpen, CalendarDays, ChartColumn, GraduationCap, LayoutGrid, Settings, Timer, type LucideIcon } from 'lucide-react';
 import type { MessageKey } from '@/locales/en';
 
 export interface NavItem {
@@ -13,6 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/calendar', labelKey: 'nav.calendar', icon: CalendarDays },
   { to: '/focus', labelKey: 'nav.timer', icon: Timer },
   { to: '/tutor', labelKey: 'nav.tutor', icon: GraduationCap },
+  { to: '/books', labelKey: 'nav.books', icon: BookOpen },
   { to: '/stats', labelKey: 'nav.stats', icon: ChartColumn },
 ];
 

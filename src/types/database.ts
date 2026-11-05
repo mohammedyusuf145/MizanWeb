@@ -152,6 +152,34 @@ export interface StudyTopic extends BaseRow {
   last_seen_at: ISODate | null;
 }
 
+export type BookStatus = 'want' | 'reading' | 'finished' | 'dropped';
+
+export interface BookQuote {
+  id: string;
+  text: string;
+  page: number | null;
+}
+
+/** A book in the reading log. Dates are local calendar days (YYYY-MM-DD). */
+export interface Book extends BaseRow {
+  title: string;
+  author: string;
+  cover_url: string | null;
+  isbn: string | null;
+  status: BookStatus;
+  rating: number | null;
+  pages: number | null;
+  current_page: number;
+  started_on: string | null;
+  finished_on: string | null;
+  language: 'ar' | 'en' | 'other' | null;
+  genre: string;
+  tags: string[];
+  notes: string;
+  quotes: BookQuote[];
+  favorite: boolean;
+}
+
 export interface TableMap {
   profiles: Profile;
   settings: Settings;
@@ -167,6 +195,7 @@ export interface TableMap {
   chat_messages: ChatMessage;
   flashcards: Flashcard;
   study_topics: StudyTopic;
+  books: Book;
 }
 
 export type TableName = keyof TableMap;
@@ -186,4 +215,5 @@ export const SYNCED_TABLES: TableName[] = [
   'chat_messages',
   'flashcards',
   'study_topics',
+  'books',
 ];

@@ -115,13 +115,13 @@ function SideLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
       to={item.to}
       aria-label={collapsed ? label : undefined}
       className={cn(
-        'press relative flex h-11 items-center gap-3 rounded-[12px] text-base transition-colors duration-[var(--dur-fast)]',
+        'press relative flex h-11 items-center gap-3 rounded-[8px] text-base transition-colors duration-[var(--dur-fast)]',
         collapsed ? 'justify-center' : 'px-3',
         isActive ? 'text-text' : 'text-text-2 hover:bg-[color-mix(in_oklab,var(--surface-1),transparent_40%)] hover:text-text',
       )}
     >
       {isActive && (
-        <motion.span layoutId={`nav-pill-${item.to === '/settings' ? 'b' : 'a'}`} aria-hidden className="absolute inset-0 rounded-[12px] border border-border bg-bg shadow-card" />
+        <motion.span layoutId={`nav-pill-${item.to === '/settings' ? 'b' : 'a'}`} aria-hidden className="absolute inset-0 rounded-[8px] border border-border bg-bg shadow-card" />
       )}
       <span className="relative">
         <Icon size={19} strokeWidth={isActive ? 2.1 : 1.75} className={isActive ? 'text-accent-text' : undefined} />

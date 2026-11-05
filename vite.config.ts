@@ -15,7 +15,12 @@ export default defineConfig({
       filename: 'sw.ts',
       registerType: 'autoUpdate',
       injectRegister: false,
-      injectManifest: { globPatterns: ['**/*.{js,css,html,svg,png,woff2}'], maximumFileSizeToCacheInBytes: 3 * 1024 * 1024 },
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // Arabic and Latin only: other scripts' font subsets load on demand.
+        globIgnores: ['**/*{cyrillic,greek,vietnamese,devanagari,hebrew,thai}*.woff2'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+      },
       devOptions: { enabled: false },
       manifest: {
         name: 'Mizan · ميزان',
@@ -26,8 +31,8 @@ export default defineConfig({
         start_url: '/board',
         scope: '/',
         display: 'standalone',
-        background_color: '#08101F',
-        theme_color: '#08101F',
+        background_color: '#0B1018',
+        theme_color: '#0B1018',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },

@@ -38,7 +38,7 @@ export function WelcomePreview() {
               <PreviewCard color={arabic} subject={t('welcome.subject.arabic')} title={t('welcome.card2')} meta={t('welcome.tomorrow')} />
             </motion.div>
           </div>
-          <motion.div {...rise(2)} className="flex flex-col items-center justify-center gap-3 rounded-[18px] border border-border bg-surface-1 p-5">
+          <motion.div {...rise(2)} className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-border bg-surface-1 p-5">
             <div className="relative size-[112px]">
               <svg viewBox="0 0 112 112" className="size-full -rotate-90">
                 <circle cx="56" cy="56" r="50" stroke="var(--surface-3)" strokeWidth="6" fill="none" />
@@ -62,7 +62,7 @@ export function WelcomePreview() {
             </div>
             <span className="text-xs text-text-2">{t('welcome.focusing')}</span>
           </motion.div>
-          <motion.div {...rise(5)} className="col-span-2 flex gap-3 rounded-[18px] border border-border bg-surface-1 p-4">
+          <motion.div {...rise(5)} className="col-span-2 flex gap-3 rounded-[12px] border border-border bg-surface-1 p-4">
             <LogoMark size={30} />
             <div className="min-w-0">
               <p className="text-xs font-medium text-text-3">{t('welcome.tutorName')}</p>

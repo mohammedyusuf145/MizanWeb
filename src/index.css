@@ -69,12 +69,12 @@
   --text-clock-xl--line-height: 1;
 
   /* Radius by role */
-  --radius-chip: 6px;
-  --radius-control: 10px;
-  --radius-card: 12px;
-  --radius-pop: 14px;
-  --radius-sheet: 20px;
-  --radius-canvas: 22px;
+  --radius-chip: 4px;
+  --radius-control: 8px;
+  --radius-card: 10px;
+  --radius-pop: 12px;
+  --radius-sheet: 16px;
+  --radius-canvas: 16px;
 
   /* Breakpoints (all in px so Tailwind orders them correctly) */
   --breakpoint-sm: 640px;
@@ -108,7 +108,8 @@
   h1, h2, .font-display {
     font-family: var(--font-display);
     font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
+    font-weight: 600;
   }
   :lang(ar) h1, :lang(ar) h2, :lang(ar) .font-display { letter-spacing: 0; }
   body {
@@ -146,6 +147,7 @@
   .flip-rtl:where([dir='rtl'] *) {
     transform: scaleX(-1);
   }
+  .font-reading { font-family: var(--font-reading); }
   .pearl {
     background: var(--pearl);
   }
@@ -153,7 +155,7 @@
     transition: transform var(--dur-fast) var(--motion-standard);
   }
   .press:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: scale(0.985);
   }
   .lift {
     transition: transform var(--dur-base) var(--motion-standard), box-shadow var(--dur-base) var(--motion-standard), border-color var(--dur-fast);

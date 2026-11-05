@@ -94,7 +94,7 @@ export function FlashcardsView({ reviewNow, onReviewHandled, canGenerate }: { re
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: Math.min(i, 12) * 0.025, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="group lift relative flex min-h-[132px] flex-col rounded-[16px] border border-border bg-surface-1 p-4"
+                  className="group lift relative flex min-h-[132px] flex-col rounded-[12px] border border-border bg-surface-1 p-4"
                 >
                   <MathMarkdown className="line-clamp-3 font-medium">{c.front}</MathMarkdown>
                   <MathMarkdown className="mt-2 line-clamp-2 text-sm text-text-3">{c.back}</MathMarkdown>
@@ -205,16 +205,16 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
                 type="button"
                 onClick={() => setShown(true)}
                 aria-label={shown ? undefined : t('fc.reveal')}
-                initial={reduced ? { opacity: 0 } : { opacity: 0, x: 40, rotate: 2 }}
+                initial={reduced ? { opacity: 0 } : { opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0, rotate: 0 }}
-                exit={reduced ? { opacity: 0 } : { opacity: 0, x: -60, rotate: -3 }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, x: -24 }}
                 transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
                 className="relative block min-h-[300px] w-full text-start [transform-style:preserve-3d]"
               >
                 <motion.div
                   className="absolute inset-0 [transform-style:preserve-3d]"
                   animate={{ rotateY: shown && !reduced ? 180 : 0 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+                  transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
                 >
                   <Face>
                     <p className="mb-3 text-xs text-text-3">{t('fc.front')}</p>
@@ -240,7 +240,7 @@ function Review({ ids, onClose }: { ids: string[]; onClose: () => void }) {
                 onClick={() => void grade(g)}
                 aria-keyshortcuts={key}
                 className={cn(
-                  'press flex flex-col items-center gap-0.5 rounded-[14px] border border-border bg-surface-1 py-3 transition-[border-color,opacity] disabled:opacity-35',
+                  'press flex flex-col items-center gap-0.5 rounded-[10px] border border-border bg-surface-1 py-3 transition-[border-color,opacity] disabled:opacity-35',
                   tone,
                 )}
               >
@@ -265,7 +265,7 @@ function Face({ children, back, hidden }: { children: React.ReactNode; back?: bo
   return (
     <div
       className={cn(
-        'absolute inset-0 flex flex-col overflow-y-auto rounded-[24px] border border-border-strong bg-surface-2 p-6 shadow-lift [backface-visibility:hidden] md:p-8',
+        'absolute inset-0 flex flex-col overflow-y-auto rounded-[16px] border border-border-strong bg-surface-2 p-6 shadow-lift [backface-visibility:hidden] md:p-8',
         hidden && 'invisible',
       )}
       style={back ? { transform: 'rotateY(180deg)' } : undefined}
@@ -432,7 +432,7 @@ function GenerateDialog({ open, onOpenChange, defaultSubject }: { open: boolean;
           <p className="mb-3 text-sm text-text-3">{t('fc.generate.result', { n: result.length })}</p>
           <ul className="flex max-h-[50vh] flex-col gap-2 overflow-y-auto">
             {result.map((c, i) => (
-              <li key={i} className="flex gap-3 rounded-[12px] border border-border bg-surface-1 p-3">
+              <li key={i} className="flex gap-3 rounded-[8px] border border-border bg-surface-1 p-3">
                 <Checkbox checked={picked[i] ?? false} onCheckedChange={(v) => setPicked((s) => s.map((x, j) => (j === i ? v : x)))} />
                 <div className="min-w-0">
                   <MathMarkdown className="font-medium">{c.front}</MathMarkdown>

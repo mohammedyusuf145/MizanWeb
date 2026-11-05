@@ -8,6 +8,7 @@ import { create } from 'zustand';
 export type Accent = 'gold' | 'pearl' | 'coral' | 'iris';
 export type MotionPref = 'system' | 'full' | 'reduce';
 export type TextSize = 'sm' | 'md' | 'lg';
+export type ArabicFont = 'plex' | 'kufi' | 'almarai';
 
 export interface DevicePrefs {
   accent: Accent;
@@ -16,9 +17,10 @@ export interface DevicePrefs {
   soundVolume: number; // 0..1
   haptics: boolean;
   textSize: TextSize;
+  arabicFont: ArabicFont;
 }
 
-const DEFAULTS: DevicePrefs = { accent: 'gold', motion: 'system', sounds: true, soundVolume: 0.6, haptics: true, textSize: 'md' };
+const DEFAULTS: DevicePrefs = { accent: 'gold', motion: 'system', sounds: true, soundVolume: 0.6, haptics: true, textSize: 'md', arabicFont: 'plex' };
 const KEY = 'mizan.prefs';
 
 function read(): DevicePrefs {
@@ -32,6 +34,7 @@ function read(): DevicePrefs {
 export const usePrefs = create<DevicePrefs>(() => read());
 
 const TEXT_PX: Record<TextSize, string> = { sm: '13px', md: '14px', lg: '16px' };
+const ARABIC_FACE: Record<ArabicFont, string> = { plex: "'IBM Plex Sans Arabic'", kufi: "'Noto Kufi Arabic Variable'", almarai: "'Almarai'" };
 
 export function applyPrefs(p: DevicePrefs = usePrefs.getState()) {
   const h = document.documentElement;
@@ -40,6 +43,7 @@ export function applyPrefs(p: DevicePrefs = usePrefs.getState()) {
   if (p.motion === 'reduce') h.dataset.motion = 'reduce';
   else delete h.dataset.motion;
   h.style.fontSize = TEXT_PX[p.textSize];
+  h.style.setProperty('--font-arabic-text', ARABIC_FACE[p.arabicFont] ?? ARABIC_FACE.plex);
   try {
     localStorage.setItem('mizan.accent', p.accent);
     localStorage.setItem('mizan.motion', p.motion);

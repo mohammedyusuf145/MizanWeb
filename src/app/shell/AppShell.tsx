@@ -32,7 +32,7 @@ export function AppShell() {
     '?': () => useShortcutsDialog.getState().setOpen(true),
   });
   return (
-    <MotionConfig reducedMotion={reduced ? 'always' : 'never'} transition={{ type: 'spring', stiffness: 420, damping: 38, mass: 0.9 }}>
+    <MotionConfig reducedMotion={reduced ? 'always' : 'never'} transition={{ type: 'spring', stiffness: 520, damping: 50, mass: 0.9 }}>
     <div className="flex min-h-dvh bg-frame">
       <a
         href="#main"
@@ -48,9 +48,9 @@ export function AppShell() {
       >
         <motion.div
           key={section}
-          initial={reduced ? false : { opacity: 0, y: 10 }}
+          initial={reduced ? false : { opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}
           className="flex min-h-full flex-col"
         >
           <Suspense fallback={<RouteFallback />}>

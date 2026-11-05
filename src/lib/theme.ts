@@ -16,7 +16,7 @@ export function applyTheme(pref: ThemePref) {
       window.setTimeout(() => h.classList.remove('theme-fade'), 420);
     }
     h.dataset.theme = next;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#08101F' : '#E4E9F2');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0B1018' : '#E8EBF0');
   };
   if (mql && listener) mql.removeEventListener('change', listener);
   mql = null;

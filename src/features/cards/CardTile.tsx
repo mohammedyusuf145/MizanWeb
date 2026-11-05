@@ -51,7 +51,7 @@ export function CardTile({
         'relative rounded-card border bg-surface-2 px-3.5 py-3 shadow-card transition-[border-color,background-color,box-shadow,transform] duration-[var(--dur-base)] ease-standard',
         card.is_exam && !done ? 'border-border-strong' : 'border-border',
         lifted
-          ? 'rotate-[1.5deg] scale-[1.03] border-border-strong bg-surface-3 shadow-lift'
+          ? 'scale-[1.02] border-border-strong bg-surface-3 shadow-lift'
           : 'group-hover/card:-translate-y-px group-hover/card:border-border-strong group-hover/card:shadow-lift',
         done && 'bg-[color-mix(in_oklab,var(--surface-2),var(--surface-1)_60%)] shadow-none',
         className,

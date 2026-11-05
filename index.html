@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#08101F" />
+    <meta name="theme-color" content="#0B1018" />
     <meta name="description" content="Mizan — tasks, focus time and an AI tutor in one study system." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -23,6 +23,9 @@
           h.dataset.theme = dark ? "dark" : "light";
           var acc = localStorage.getItem("mizan.accent"); if (acc && acc !== "gold") h.dataset.accent = acc;
           if (localStorage.getItem("mizan.motion") === "reduce") h.dataset.motion = "reduce";
+          var pf = JSON.parse(localStorage.getItem("mizan.prefs") || "{}");
+          var faces = { kufi: "'Noto Kufi Arabic Variable'", almarai: "'Almarai'" };
+          if (faces[pf.arabicFont]) h.style.setProperty("--font-arabic-text", faces[pf.arabicFont]);
         } catch (e) {}
       })();
     </script>

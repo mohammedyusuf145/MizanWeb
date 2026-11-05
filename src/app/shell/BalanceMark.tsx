@@ -20,7 +20,7 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
           <stop offset="1" stopColor="#c4b2ea" />
         </radialGradient>
         <radialGradient id={`glow${id}`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="var(--accent)" stopOpacity="0.28" />
+          <stop offset="0" stopColor="var(--accent)" stopOpacity="0.14" />
           <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
       </defs>
@@ -46,11 +46,11 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
       {/* Beam: tips under the pearl's weight, then finds level */}
       <motion.g
         style={{ transformOrigin: '110px 140px' }}
-        initial={reduced ? false : { rotate: -9, opacity: 0 }}
-        animate={reduced ? { rotate: 0, opacity: 1 } : { rotate: [-9, -9, 6, -2.5, 1, 0], opacity: [0, 1, 1, 1, 1, 1] }}
-        transition={{ duration: 1.9, times: [0, 0.18, 0.42, 0.62, 0.8, 1], ease: 'easeInOut' }}
+        initial={reduced ? false : { rotate: -6, opacity: 0 }}
+        animate={reduced ? { rotate: 0, opacity: 1 } : { rotate: [-6, -6, 3, 0], opacity: [0, 1, 1, 1] }}
+        transition={{ duration: 1.5, times: [0, 0.25, 0.6, 1], ease: 'easeInOut' }}
       >
-        <rect x="34" y="134" width="152" height="12" rx="6" fill="var(--accent)" />
+        <rect x="34" y="135" width="152" height="10" rx="2" fill="var(--accent)" />
         <motion.circle
           cx="110"
           cy="100"
@@ -58,7 +58,7 @@ export function BalanceMark({ size = 220 }: { size?: number }) {
           fill={`url(#pearl${id})`}
           initial={reduced ? false : { y: -120, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.25, type: 'spring', stiffness: 220, damping: 15, mass: 0.9 }}
+          transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 26 }}
         />
       </motion.g>
     </svg>

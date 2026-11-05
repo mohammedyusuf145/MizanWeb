@@ -112,7 +112,7 @@ export function Composer({
         onDragLeave={() => setDrag(false)}
         onDrop={onDrop}
         className={cn(
-          'mx-auto w-full max-w-[760px] rounded-[22px] border bg-surface-2 shadow-pop transition-[border-color,box-shadow] duration-[var(--dur-base)]',
+          'mx-auto w-full max-w-[760px] rounded-[16px] border bg-surface-2 shadow-pop transition-[border-color,box-shadow] duration-[var(--dur-base)]',
           'focus-within:border-[color-mix(in_oklab,var(--accent),transparent_50%)]',
           drag ? 'border-accent' : 'border-border-strong',
         )}
@@ -123,9 +123,9 @@ export function Composer({
               {files.map((f, i) => (
                 <li key={i} className="relative">
                   {f.meta.thumb ? (
-                    <img src={f.meta.thumb} alt={f.meta.name} className="size-14 rounded-[12px] border border-border object-cover" />
+                    <img src={f.meta.thumb} alt={f.meta.name} className="size-14 rounded-[8px] border border-border object-cover" />
                   ) : (
-                    <span className="inline-flex h-14 max-w-[180px] items-center gap-2 rounded-[12px] border border-border bg-surface-1 px-3 text-sm text-text-2">
+                    <span className="inline-flex h-14 max-w-[180px] items-center gap-2 rounded-[8px] border border-border bg-surface-1 px-3 text-sm text-text-2">
                       <FileText size={15} className="shrink-0" />
                       <span className="truncate" dir="auto">
                         {f.meta.name}
